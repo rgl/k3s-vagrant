@@ -2,7 +2,7 @@
 set -eux
 
 k3s_version="$1"; shift
-k3s_cluster_secret="$1"; shift
+k3s_token="$1"; shift
 ip_address="$1"; shift
 
 # configure the motd.
@@ -23,12 +23,12 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-# see server arguments at e.g. https://github.com/rancher/k3s/blob/v0.7.0/pkg/cli/cmds/server.go#L39
+# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.0.0/pkg/cli/cmds/server.go#L49
 # or run k3s server --help
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_VERSION="$k3s_version" \
-        K3S_CLUSTER_SECRET="$k3s_cluster_secret" \
+        K3S_TOKEN="$k3s_token" \
         sh -s -- \
             server \
             --node-ip "$ip_address" \
@@ -42,7 +42,7 @@ curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh 
 systemctl cat k3s
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    master   3m    v1.14.4-k3s.1
+# e.g. s1     Ready    master   3m    v1.16.3-k3s.2
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -58,6 +58,11 @@ kubectl cluster-info
 
 # list nodes.
 kubectl get nodes -o wide
+
+# list all objects.
+# NB without this hugly redirect the kubectl output will be all messed
+#    when used from a vagrant session.
+kubectl get all --all-namespaces >/tmp/kubectl-$$.tmp; cat /tmp/kubectl-$$.tmp; rm /tmp/kubectl-$$.tmp
 
 # list services.
 kubectl get svc

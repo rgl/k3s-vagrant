@@ -2,7 +2,7 @@
 set -eux
 
 k3s_version="$1"; shift
-k3s_cluster_secret="$1"; shift
+k3s_token="$1"; shift
 k3s_url="$1"; shift
 ip_address="$1"; shift
 
@@ -29,7 +29,7 @@ EOF
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_VERSION="$k3s_version" \
-        K3S_CLUSTER_SECRET="$k3s_cluster_secret" \
+        K3S_TOKEN="$k3s_token" \
         K3S_URL="$k3s_url" \
         sh -s -- \
             agent \

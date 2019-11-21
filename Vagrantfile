@@ -4,14 +4,14 @@ ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 require 'ipaddr'
 
-def get_or_generate_k3s_cluster_secret
+def get_or_generate_k3s_token
   # TODO generate an unique random an cache it.
   # generated with openssl rand -hex 32
   '7e982a7bbac5f385ecbb988f800787bc9bb617552813a63c4469521c53d83b6e'
 end
 
 # see https://github.com/rancher/k3s/releases
-k3s_version = 'v0.7.0'
+k3s_version = 'v1.0.0'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
@@ -20,7 +20,7 @@ first_agent_node_ip     = '10.11.0.201'
 
 server_node_ip_address  = IPAddr.new first_server_node_ip
 agent_node_ip_address   = IPAddr.new first_agent_node_ip
-k3s_cluster_secret      = get_or_generate_k3s_cluster_secret
+k3s_token               = get_or_generate_k3s_token
 
 Vagrant.configure(2) do |config|
   config.vm.box = 'debian-10-amd64'
@@ -56,7 +56,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         k3s_version,
-        k3s_cluster_secret,
+        k3s_token,
         ip_address
       ]
     end
@@ -80,7 +80,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_version,
-        k3s_cluster_secret,
+        k3s_token,
         "https://s1.example.test:6443",
         ip_address
       ]
