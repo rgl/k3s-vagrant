@@ -4,6 +4,7 @@ set -eux
 k3s_version="${1:-v1.0.0}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
+krew_version="${1:-v0.3.2}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
 fqdn="$(hostname --fqdn)"
 
 # configure the motd.
@@ -94,6 +95,19 @@ rm traefik.yaml
 # e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
 $SHELL -c 'while [ -z "$(crictl pods --label app=svclb-traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
+# install the krew kubectl package manager.
+echo "installing the krew $krew_version kubectl package manager..."
+apt-get install -y --no-install-recommends git-core
+wget -qO- "https://github.com/kubernetes-sigs/krew/releases/download/$krew_version/krew.tar.gz" | tar xzf - ./krew-linux_amd64
+wget -q "https://github.com/kubernetes-sigs/krew/releases/download/$krew_version/krew.yaml"
+./krew-linux_amd64 install --manifest=krew.yaml
+rm krew-linux_amd64
+cat >/etc/profile.d/krew.sh <<'EOF'
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+EOF
+source /etc/profile.d/krew.sh
+kubectl krew version
+
 # save kubeconfig and admin password in the host.
 # NB the default users are generated at https://github.com/rancher/k3s/blob/99b8222e8df034b5450eaac9bd21abd5462b6d56/pkg/daemons/control/server.go#L437
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd. e.g.: the admin user is in the system:masters group:
@@ -124,10 +138,35 @@ kubectl cluster-info
 # list nodes.
 kubectl get nodes -o wide
 
+# rbac info.
+kubectl get serviceaccount --all-namespaces
+kubectl get role --all-namespaces
+kubectl get rolebinding --all-namespaces
+kubectl get rolebinding --all-namespaces -o json | jq .items[].subjects
+kubectl get clusterrole --all-namespaces
+kubectl get clusterrolebinding --all-namespaces
+kubectl get clusterrolebinding --all-namespaces -o json | jq .items[].subjects
+
+# rbac access matrix.
+# see https://github.com/corneliusweig/rakkess/blob/master/doc/USAGE.md
+kubectl krew install access-matrix
+kubectl access-matrix version --full
+kubectl access-matrix # at cluster scope.
+kubectl access-matrix --namespace default
+kubectl access-matrix --sa kubernetes-dashboard --namespace kubernetes-dashboard
+
+# list system secrets.
+kubectl -n kube-system get secret
+
 # list all objects.
 # NB without this hugly redirect the kubectl output will be all messed
 #    when used from a vagrant session.
 kubectl get all --all-namespaces >/tmp/kubectl-$$.tmp; cat /tmp/kubectl-$$.tmp; rm /tmp/kubectl-$$.tmp
+
+# really get all objects.
+# see https://github.com/corneliusweig/ketall/blob/master/doc/USAGE.md
+kubectl krew install get-all
+kubectl get-all
 
 # list services.
 kubectl get svc
