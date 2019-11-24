@@ -88,6 +88,30 @@ rm traefik.yaml
 # e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
 $SHELL -c 'while [ -z "$(crictl pods --label app=svclb-traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
+# save kubeconfig and admin password in the host.
+# NB the default users are generated at https://github.com/rancher/k3s/blob/99b8222e8df034b5450eaac9bd21abd5462b6d56/pkg/daemons/control/server.go#L437
+#    and saved at /var/lib/rancher/k3s/server/cred/passwd. e.g.: the admin user is in the system:masters group:
+#       553dd25ca860c634cc57746bebc1d5cf,admin,admin,system:masters
+#    NB this file path corresponds to the k3s server --basic-auth-file argument.
+# see https://docs.traefik.io/v1.7/configuration/api/
+mkdir -p /vagrant/tmp
+python3 - <<EOF
+import yaml
+
+d = yaml.load(open('/etc/rancher/k3s/k3s.yaml', 'r'))
+
+# save user passwords.
+for u in d['users']:
+    open(f"/vagrant/tmp/{u['user']['username']}-password.txt", 'w').write(u['user']['password'])
+    print(f"Kubernetes API Server https://$fqdn:6443 user {u['user']['username']} password {u['user']['password']}")
+
+# set the server ip.
+for c in d['clusters']:
+    c['cluster']['server'] = 'https://$fqdn:6443'
+
+yaml.dump(d, open('/vagrant/tmp/admin.conf', 'w'), default_flow_style=False)
+EOF
+
 # show cluster-info.
 kubectl cluster-info
 
