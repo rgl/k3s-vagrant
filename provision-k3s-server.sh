@@ -74,6 +74,12 @@ d = yaml.load(config_orig)
 d['spec']['set']['dashboard.enabled'] = 'true'
 d['spec']['set']['dashboard.domain'] = 'traefik-dashboard.example.test'
 
+# re-configure traefik to skip certificate validation.
+# NB this is needed to expose the k8s dashboard as an ingress at https://kubernetes-dashboard.example.test.
+#    TODO see how to set the CAs in traefik.
+# NB this should never be done at production.
+d['spec']['set']['ssl.insecureSkipVerify'] = 'true'
+
 # show the differences and save the modified yaml file.
 config = io.StringIO()
 yaml.dump(d, config, default_flow_style=False)

@@ -6,6 +6,7 @@ Configure your hosts file with:
 ```
 10.11.0.101 s1.example.test
 10.11.0.101 traefik-dashboard.example.test
+10.11.0.101 kubernetes-dashboard.example.test
 ```
 
 Install the base [debian vagrant box](https://github.com/rgl/debian-vagrant).
@@ -40,6 +41,25 @@ The default `admin` user password is outputted to the vagrant output.
 
 You can also get it from the `tmp/admin-password.txt` file or the
 `/etc/rancher/k3s/k3s.yaml` (inside the `s1` machine) file.
+
+## Kubernetes Dashboard
+
+Launch the kubernetes API server proxy in background:
+
+```bash
+export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl proxy &
+```
+
+Then access the kubernetes dashboard at:
+
+    http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+Then select `Token` and use the contents of `tmp/admin-token.txt` as the token.
+
+Instead of using the kubectl proxy, you can also access the Kubernetes Dashboard at:
+
+    https://kubernetes-dashboard.example.test
 
 # Reference
 

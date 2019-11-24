@@ -12,6 +12,8 @@ end
 
 # see https://github.com/rancher/k3s/releases
 k3s_version = 'v1.0.0'
+# see https://github.com/kubernetes/dashboard/releases
+k8s_dashboard_version = 'v2.0.0-beta6'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
@@ -59,6 +61,7 @@ Vagrant.configure(2) do |config|
         k3s_token,
         ip_address
       ]
+      config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
     end
   end
 
