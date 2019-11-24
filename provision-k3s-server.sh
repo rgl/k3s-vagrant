@@ -1,9 +1,10 @@
 #!/bin/bash
 set -eux
 
-k3s_version="$1"; shift
+k3s_version="${1:-v1.0.0}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
+fqdn="$(hostname --fqdn)"
 
 # configure the motd.
 # NB this was generated at http://patorjk.com/software/taag/#p=display&f=Big&t=k3s%0Aserver.
@@ -25,12 +26,14 @@ EOF
 # install k3s.
 # see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.0.0/pkg/cli/cmds/server.go#L49
 # or run k3s server --help
+# see https://rancher.com/docs/k3s/latest/en/configuration/
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_VERSION="$k3s_version" \
         K3S_TOKEN="$k3s_token" \
         sh -s -- \
             server \
+            --no-deploy traefik \
             --node-ip "$ip_address" \
             --cluster-cidr '10.12.0.0/16' \
             --service-cidr '10.13.0.0/16' \
@@ -48,6 +51,38 @@ $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready.
 # wait for the kube-dns pod to be Running.
 # e.g. coredns-fb8b8dccf-rh4fg   1/1     Running   0          33m
 $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespace kube-system | grep -E "\s+Running\s+")" ]; do sleep 3; done'
+
+# install traefik as the k8s ingress controller.
+# see https://docs.traefik.io/v1.7/configuration/api/
+# see https://github.com/rancher/k3s/issues/350#issuecomment-511218588
+# see https://github.com/rancher/k3s/blob/v1.0.0/scripts/download#L21
+# see https://github.com/helm/charts/tree/master/stable/traefik
+# see https://kubernetes-charts.storage.googleapis.com/traefik-1.77.1.tgz
+echo 'patching traefik to expose its api/dashboard at http://traefik-dashboard.example.test...'
+wget -q https://raw.githubusercontent.com/rancher/k3s/$k3s_version/manifests/traefik.yaml
+apt-get install -y python3-yaml
+python3 - <<'EOF'
+import difflib
+import io
+import sys
+import yaml
+
+config_orig = open('traefik.yaml', 'r', encoding='utf-8').read()
+d = yaml.load(config_orig)
+
+# re-configure traefik to start the api/dashboard.
+d['spec']['set']['dashboard.enabled'] = 'true'
+d['spec']['set']['dashboard.domain'] = 'traefik-dashboard.example.test'
+
+# show the differences and save the modified yaml file.
+config = io.StringIO()
+yaml.dump(d, config, default_flow_style=False)
+config = config.getvalue()
+sys.stdout.writelines(difflib.unified_diff(config_orig.splitlines(1), config.splitlines(1)))
+open('traefik.yaml', 'w', encoding='utf-8').write(config)
+EOF
+kubectl -n kube-system apply -f traefik.yaml
+rm traefik.yaml
 
 # wait for the svclb-traefik pod to be Running.
 # e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
