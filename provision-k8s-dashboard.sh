@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-kubernetes_dashboard_version="${1:-v2.0.0-beta6}"; shift || true
+kubernetes_dashboard_version="${1:-v2.0.0-rc2}"; shift || true
 kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard/$kubernetes_dashboard_version/aio/deploy/recommended.yaml"
 
 # install the kubernetes dashboard.
@@ -47,7 +47,7 @@ kubectl \
 # see https://docs.traefik.io/providers/kubernetes-ingress/
 # see https://docs.traefik.io/routing/providers/kubernetes-crd/
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#ingress-v1beta1-networking-k8s-io
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#ingress-v1beta1-networking-k8s-io
 kubectl apply -n kubernetes-dashboard -f - <<'EOF'
 kind: Ingress
 apiVersion: networking.k8s.io/v1beta1

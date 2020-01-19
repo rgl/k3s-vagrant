@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-k3s_version="${1:-v1.0.0}"; shift
+k3s_version="${1:-v1.17.0+k3s.1}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.3.2}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
@@ -25,7 +25,7 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.0.0/pkg/cli/cmds/server.go#L49
+# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.17.0+k3s.1/pkg/cli/cmds/server.go#L49
 # or run k3s server --help
 # see https://rancher.com/docs/k3s/latest/en/configuration/
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
@@ -46,7 +46,7 @@ curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh 
 systemctl cat k3s
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    master   3m    v1.16.3-k3s.2
+# e.g. s1     Ready    master   3m    v1.17.0+k3s.1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -56,9 +56,9 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 # install traefik as the k8s ingress controller.
 # see https://docs.traefik.io/v1.7/configuration/api/
 # see https://github.com/rancher/k3s/issues/350#issuecomment-511218588
-# see https://github.com/rancher/k3s/blob/v1.0.0/scripts/download#L21
+# see https://github.com/rancher/k3s/blob/v1.17.0+k3s.1/scripts/download#L21
 # see https://github.com/helm/charts/tree/master/stable/traefik
-# see https://kubernetes-charts.storage.googleapis.com/traefik-1.77.1.tgz
+# see https://kubernetes-charts.storage.googleapis.com/traefik-1.81.0.tgz
 echo 'patching traefik to expose its api/dashboard at http://traefik-dashboard.example.test...'
 wget -q https://raw.githubusercontent.com/rancher/k3s/$k3s_version/manifests/traefik.yaml
 apt-get install -y python3-yaml

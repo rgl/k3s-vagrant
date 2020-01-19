@@ -61,6 +61,10 @@ Instead of using the kubectl proxy, you can also access the Kubernetes Dashboard
 
     https://kubernetes-dashboard.example.test
 
+# Notes
+
+* k3s has a custom k8s authenticator module that does user authentication from `/var/lib/rancher/k3s/server/cred/passwd`.
+
 # Reference
 
 * [k3s Installation and Configuration Options](https://rancher.com/docs/k3s/latest/en/installation/install-options/)
