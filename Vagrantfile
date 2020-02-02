@@ -11,9 +11,9 @@ def get_or_generate_k3s_token
 end
 
 # see https://github.com/rancher/k3s/releases
-k3s_version = 'v1.17.0+k3s.1'
+k3s_version = 'v1.17.2+k3s1'
 # see https://github.com/kubernetes/dashboard/releases
-k8s_dashboard_version = 'v2.0.0-rc2'
+k8s_dashboard_version = 'v2.0.0-rc3'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
