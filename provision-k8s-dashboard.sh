@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-kubernetes_dashboard_version="${1:-v2.0.0-rc3}"; shift || true
+kubernetes_dashboard_version="${1:-v2.0.0-rc5}"; shift || true
 kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard/$kubernetes_dashboard_version/aio/deploy/recommended.yaml"
 
 # install the kubernetes dashboard.
