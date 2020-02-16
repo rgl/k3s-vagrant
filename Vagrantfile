@@ -14,6 +14,8 @@ end
 k3s_version = 'v1.17.2+k3s1'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.0.0-rc3'
+# see https://github.com/kubernetes-sigs/krew/releases
+krew_version = 'v0.3.4'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
@@ -59,7 +61,8 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         k3s_version,
         k3s_token,
-        ip_address
+        ip_address,
+        krew_version
       ]
       config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
     end
