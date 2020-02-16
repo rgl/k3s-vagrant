@@ -108,6 +108,10 @@ EOF
 source /etc/profile.d/krew.sh
 kubectl krew version
 
+# symlink the default kubeconfig path so local tools like k9s can easily
+# find it without exporting the KUBECONFIG environment variable.
+ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
+
 # save kubeconfig and admin password in the host.
 # NB the default users are generated at https://github.com/rancher/k3s/blob/99b8222e8df034b5450eaac9bd21abd5462b6d56/pkg/daemons/control/server.go#L437
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd. e.g.: the admin user is in the system:masters group:

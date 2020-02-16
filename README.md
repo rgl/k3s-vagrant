@@ -61,6 +61,17 @@ Instead of using the kubectl proxy, you can also access the Kubernetes Dashboard
 
     https://kubernetes-dashboard.example.test
 
+## K9s Dashboard
+
+The [K9s](https://github.com/derailed/k9s) console UI dashboard is also
+installed in the server node. You can access it by running:
+
+```bash
+vagrant ssh s1
+sudo su -l
+k9s
+```
+
 # Notes
 
 * k3s has a custom k8s authenticator module that does user authentication from `/var/lib/rancher/k3s/server/cred/passwd`.

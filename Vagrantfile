@@ -14,6 +14,8 @@ end
 k3s_version = 'v1.17.2+k3s1'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.0.0-rc5'
+# see https://github.com/derailed/k9s/releases
+k9s_version = 'v0.15.2'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.3.4'
 
@@ -65,6 +67,7 @@ Vagrant.configure(2) do |config|
         krew_version
       ]
       config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
+      config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
     end
   end
 
