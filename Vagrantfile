@@ -12,12 +12,19 @@ end
 
 # see https://github.com/rancher/k3s/releases
 k3s_version = 'v1.17.3+k3s1'
+# see https://github.com/helm/helm/releases
+helm_version = 'v3.1.1'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.0.0-rc5'
 # see https://github.com/derailed/k9s/releases
 k9s_version = 'v0.17.5'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.3.4'
+# see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
+gitlab_runner_chart_version = '0.14.0'
+# link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant). 
+gitlab_fqdn = 'gitlab.example.com'
+gitlab_ip = '10.10.9.99'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
@@ -66,8 +73,10 @@ Vagrant.configure(2) do |config|
         ip_address,
         krew_version
       ]
+      config.vm.provision 'shell', path: 'provision-helm.sh', args: [helm_version] # NB this might not really be needed, as rancher has a HelmChart CRD.
       config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
       config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
+      config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
     end
   end
 
@@ -94,5 +103,25 @@ Vagrant.configure(2) do |config|
         ip_address
       ]
     end
+  end
+
+  config.trigger.before :up do |trigger|
+    trigger.only_on = 's1'
+    trigger.run = {
+      inline: '''bash -euc \'
+mkdir -p tmp
+artifacts=(
+  ../gitlab-vagrant/tmp/gitlab.example.com-crt.pem
+  ../gitlab-vagrant/tmp/gitlab.example.com-crt.der
+  ../gitlab-vagrant/tmp/gitlab-runners-registration-token.txt
+)
+for artifact in "${artifacts[@]}"; do
+  if [ -f $artifact ]; then
+    cp $artifact tmp
+  fi
+done
+\'
+'''
+    }
   end
 end

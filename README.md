@@ -17,6 +17,8 @@ Install the required vagrant plugins:
 vagrant plugin install vagrant-hosts
 ```
 
+Optionally, start the [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant) environment at `../gitlab-vagrant`. If you do this, this environment will have the [gitlab-runner helm chart](https://docs.gitlab.com/runner/install/kubernetes.html) installed in the k8s cluster.
+
 Launch the environment:
 
 ```bash
