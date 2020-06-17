@@ -11,7 +11,7 @@ def get_or_generate_k3s_token
 end
 
 # see https://github.com/rancher/k3s/releases
-k3s_version = 'v1.17.3+k3s1'
+k3s_version = 'v1.18.3+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.2.4'
 # see https://github.com/kubernetes/dashboard/releases
