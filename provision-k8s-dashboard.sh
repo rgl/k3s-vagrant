@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-kubernetes_dashboard_version="${1:-v2.0.0-rc5}"; shift || true
+kubernetes_dashboard_version="${1:-v2.0.1}"; shift || true
 kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard/$kubernetes_dashboard_version/aio/deploy/recommended.yaml"
 
 # install the kubernetes dashboard.
@@ -43,11 +43,15 @@ kubectl \
   >/vagrant/tmp/admin-token.txt
 
 # expose the kubernetes dashboard at kubernetes-dashboard.example.test.
+# NB you must add any of the cluster node IP addresses to your computer hosts file, e.g.:
+#       10.10.10.101 kubernetes-dashboard.example.test
+#    and access it as:
+#       https://kubernetes-dashboard.example.test
 # see kubectl get -n kubernetes-dashboard service/kubernetes-dashboard -o yaml
 # see https://docs.traefik.io/providers/kubernetes-ingress/
 # see https://docs.traefik.io/routing/providers/kubernetes-crd/
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#ingress-v1beta1-networking-k8s-io
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io
 kubectl apply -n kubernetes-dashboard -f - <<'EOF'
 kind: Ingress
 apiVersion: networking.k8s.io/v1beta1
