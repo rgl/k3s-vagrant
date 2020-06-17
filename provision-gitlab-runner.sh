@@ -5,7 +5,7 @@ set -euxo pipefail
 # NB this only works when https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant
 [ -f /vagrant/tmp/gitlab-runners-registration-token.txt ] || exit 0
 
-gitlab_runner_chart_version="${1:-0.14.0}"; shift
+gitlab_runner_chart_version="${1:-0.17.1}"; shift
 gitlab_fqdn="${1:-gitlab.example.com}"; shift
 gitlab_ip="${1:-10.10.9.99}"; shift
 gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
@@ -23,7 +23,7 @@ helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
 #     NAME                 CHART VERSION APP VERSION DESCRIPTION  
-#     gitlab/gitlab-runner 0.14.0        12.8.0      GitLab Runner
+#     gitlab/gitlab-runner 0.17.1        13.0.1      GitLab Runner
 helm search repo gitlab/gitlab-runner --versions | head -10
 
 # create the namespace.
@@ -42,7 +42,7 @@ kubectl \
 
 # set the configuration.
 # NB the default values are described at:
-#       https://gitlab.com/gitlab-org/charts/gitlab-runner/-/blob/v0.14.0/values.yaml
+#       https://gitlab.com/gitlab-org/charts/gitlab-runner/-/blob/v0.17.1/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
 cat >gitlab-runner-values.yml <<EOF
 gitlabUrl: https://$gitlab_fqdn/
