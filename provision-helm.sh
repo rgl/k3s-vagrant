@@ -4,7 +4,7 @@ set -eu
 #
 # deploy helm.
 
-helm_version="${1:-v3.1.1}"; shift || true
+helm_version="${1:-v3.2.4}"; shift || true
 
 # install helm.
 # see https://helm.sh/docs/intro/install/
