@@ -22,7 +22,7 @@ Optionally, start the [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant
 Launch the environment:
 
 ```bash
-time vagrant up --provider=libvirt # or --provider=virtualbox
+time vagrant up --no-destroy-on-error --provider=libvirt # or --provider=virtualbox
 ```
 
 ## Traefik Dashboard
