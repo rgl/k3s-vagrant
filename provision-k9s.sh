@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-k9s_version="${1:-v0.20.5}"; shift
+k9s_version="${1:-v0.22.1}"; shift
 
 # download and install.
 wget -qO- "https://github.com/derailed/k9s/releases/download/$k9s_version/k9s_Linux_x86_64.tar.gz" \
