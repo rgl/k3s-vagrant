@@ -58,10 +58,10 @@ Vagrant.configure(2) do |config|
 
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
-        lv.memory = 512
+        lv.memory = 1024
       end
       config.vm.provider 'virtualbox' do |vb|
-        vb.memory = 512
+        vb.memory = 1024
       end
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
