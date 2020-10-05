@@ -19,7 +19,7 @@ k8s_dashboard_version = 'v2.0.3'
 # see https://github.com/derailed/k9s/releases
 k9s_version = 'v0.22.1'
 # see https://github.com/kubernetes-sigs/krew/releases
-krew_version = 'v0.3.4'
+krew_version = 'v0.4.0'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 gitlab_runner_chart_version = '0.21.1'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant). 

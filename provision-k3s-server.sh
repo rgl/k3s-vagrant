@@ -4,7 +4,7 @@ set -eux
 k3s_version="${1:-v1.18.3+k3s1}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
-krew_version="${1:-v0.3.4}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
+krew_version="${1:-v0.4.0}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
 fqdn="$(hostname --fqdn)"
 
 # configure the motd.
