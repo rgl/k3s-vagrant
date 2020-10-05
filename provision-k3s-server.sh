@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eux
 
-k3s_version="${1:-v1.18.8+k3s1}"; shift
+k3s_channel="${1:-latest}"; shift
+k3s_version="${1:-v1.19.2+k3s1}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.4.0}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
@@ -25,11 +26,12 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.18.8+k3s1/pkg/cli/cmds/server.go#L50
+# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.19.2+k3s1/pkg/cli/cmds/server.go#L71
 # or run k3s server --help
 # see https://rancher.com/docs/k3s/latest/en/configuration/
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
     | \
+        INSTALL_K3S_CHANNEL="$k3s_channel" \
         INSTALL_K3S_VERSION="$k3s_version" \
         K3S_TOKEN="$k3s_token" \
         sh -s -- \
@@ -46,7 +48,7 @@ curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh 
 systemctl cat k3s
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    master   3m    v1.18.8+k3s1
+# e.g. s1     Ready    master   3m    v1.19.2+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -56,7 +58,7 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 # install traefik as the k8s ingress controller.
 # see https://docs.traefik.io/v1.7/configuration/api/
 # see https://github.com/rancher/k3s/issues/350#issuecomment-511218588
-# see https://github.com/rancher/k3s/blob/v1.18.8+k3s1/scripts/download#L21
+# see https://github.com/rancher/k3s/blob/v1.19.2+k3s1/scripts/download#L16
 # see https://github.com/helm/charts/tree/master/stable/traefik
 # see https://kubernetes-charts.storage.googleapis.com/traefik-1.81.0.tgz
 echo 'patching traefik to expose its api/dashboard at http://traefik-dashboard.example.test...'
@@ -119,22 +121,25 @@ kubectl krew version
 # find it without exporting the KUBECONFIG environment variable.
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
-# save kubeconfig and admin password in the host.
-# NB the default users are generated at https://github.com/rancher/k3s/blob/99b8222e8df034b5450eaac9bd21abd5462b6d56/pkg/daemons/control/server.go#L437
-#    and saved at /var/lib/rancher/k3s/server/cred/passwd. e.g.: the admin user is in the system:masters group:
-#       553dd25ca860c634cc57746bebc1d5cf,admin,admin,system:masters
-#    NB this file path corresponds to the k3s server --basic-auth-file argument.
-# see https://docs.traefik.io/v1.7/configuration/api/
+# save kubeconfig in the host.
+# NB the default users are generated at https://github.com/rancher/k3s/blob/v1.19.2+k3s1/pkg/daemons/control/server.go#L448
+#    and saved at /var/lib/rancher/k3s/server/cred/passwd
 mkdir -p /vagrant/tmp
 python3 - <<EOF
+import base64
 import yaml
 
 d = yaml.load(open('/etc/rancher/k3s/k3s.yaml', 'r'))
 
-# save user passwords.
+# save cluster ca certificate.
+for c in d['clusters']:
+    open(f"/vagrant/tmp/{c['name']}-ca-crt.pem", 'wb').write(base64.b64decode(c['cluster']['certificate-authority-data']))
+
+# save user client certificates.
 for u in d['users']:
-    open(f"/vagrant/tmp/{u['user']['username']}-password.txt", 'w').write(u['user']['password'])
-    print(f"Kubernetes API Server https://$fqdn:6443 user {u['user']['username']} password {u['user']['password']}")
+    open(f"/vagrant/tmp/{u['name']}-crt.pem", 'wb').write(base64.b64decode(u['user']['client-certificate-data']))
+    open(f"/vagrant/tmp/{u['name']}-key.pem", 'wb').write(base64.b64decode(u['user']['client-key-data']))
+    print(f"Kubernetes API Server https://$fqdn:6443 user {u['name']} client certificate in tmp/{u['name']}-*.pem")
 
 # set the server ip.
 for c in d['clusters']:

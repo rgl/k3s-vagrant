@@ -39,10 +39,28 @@ Access the Rancher Server at:
 
 **NB** This is a proxy to the k8s API server (which is running in port 6444).
 
-The default `admin` user password is outputted to the vagrant output.
+**NB** You must use the client certificate that is inside the `tmp/admin.conf`,
+`tmp/*.pem`, or `/etc/rancher/k3s/k3s.yaml` (inside the `s1` machine) file.
 
-You can also get it from the `tmp/admin-password.txt` file or the
-`/etc/rancher/k3s/k3s.yaml` (inside the `s1` machine) file.
+Access the rancher server using the client certificate with httpie:
+
+```bash
+http \
+    --verify tmp/default-ca-crt.pem \
+    --cert tmp/default-crt.pem \
+    --cert-key tmp/default-key.pem \
+    https://s1.example.test:6443
+```
+
+Or with curl:
+
+```bash
+curl \
+    --cacert tmp/default-ca-crt.pem \
+    --cert tmp/default-crt.pem \
+    --key tmp/default-key.pem \
+    https://s1.example.test:6443
+```
 
 ## Kubernetes Dashboard
 

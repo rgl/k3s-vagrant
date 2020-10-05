@@ -10,19 +10,22 @@ def get_or_generate_k3s_token
   '7e982a7bbac5f385ecbb988f800787bc9bb617552813a63c4469521c53d83b6e'
 end
 
+# see https://get.k3s.io/
+# see https://update.k3s.io/v1-release/channels
 # see https://github.com/rancher/k3s/releases
-k3s_version = 'v1.18.8+k3s1'
+k3s_channel = 'latest'
+k3s_version = 'v1.19.2+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.3.4'
 # see https://github.com/kubernetes/dashboard/releases
-k8s_dashboard_version = 'v2.0.3'
+k8s_dashboard_version = 'v2.0.4'
 # see https://github.com/derailed/k9s/releases
 k9s_version = 'v0.22.1'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.4.0'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 gitlab_runner_chart_version = '0.21.1'
-# link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant). 
+# link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 gitlab_fqdn = 'gitlab.example.com'
 gitlab_ip = '10.10.9.99'
 
@@ -68,6 +71,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
+        k3s_channel,
         k3s_version,
         k3s_token,
         ip_address,
@@ -97,6 +101,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
+        k3s_channel,
         k3s_version,
         k3s_token,
         "https://s1.example.test:6443",

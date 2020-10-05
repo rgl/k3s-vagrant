@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eux
 
+k3s_channel="$1"; shift
 k3s_version="$1"; shift
 k3s_token="$1"; shift
 k3s_url="$1"; shift
@@ -28,6 +29,7 @@ EOF
 # install k3s.
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
     | \
+        INSTALL_K3S_CHANNEL="$k3s_channel" \
         INSTALL_K3S_VERSION="$k3s_version" \
         K3S_TOKEN="$k3s_token" \
         K3S_URL="$k3s_url" \
