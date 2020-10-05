@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-k3s_version="${1:-v1.18.3+k3s1}"; shift
+k3s_version="${1:-v1.18.8+k3s1}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.4.0}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
@@ -25,7 +25,7 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.18.3+k3s1/pkg/cli/cmds/server.go#L50
+# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.18.8+k3s1/pkg/cli/cmds/server.go#L50
 # or run k3s server --help
 # see https://rancher.com/docs/k3s/latest/en/configuration/
 curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
@@ -46,7 +46,7 @@ curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh 
 systemctl cat k3s
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    master   3m    v1.18.3+k3s1
+# e.g. s1     Ready    master   3m    v1.18.8+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -56,7 +56,7 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 # install traefik as the k8s ingress controller.
 # see https://docs.traefik.io/v1.7/configuration/api/
 # see https://github.com/rancher/k3s/issues/350#issuecomment-511218588
-# see https://github.com/rancher/k3s/blob/v1.18.3+k3s1/scripts/download#L21
+# see https://github.com/rancher/k3s/blob/v1.18.8+k3s1/scripts/download#L21
 # see https://github.com/helm/charts/tree/master/stable/traefik
 # see https://kubernetes-charts.storage.googleapis.com/traefik-1.81.0.tgz
 echo 'patching traefik to expose its api/dashboard at http://traefik-dashboard.example.test...'
@@ -72,14 +72,21 @@ config_orig = open('traefik.yaml', 'r', encoding='utf-8').read()
 d = yaml.load(config_orig)
 
 # re-configure traefik to start the api/dashboard.
-d['spec']['set']['dashboard.enabled'] = 'true'
-d['spec']['set']['dashboard.domain'] = 'traefik-dashboard.example.test'
+values = yaml.load(d['spec']['valuesContent'])
+values['dashboard'] = {}
+values['dashboard']['enabled'] = True
+values['dashboard']['domain'] = 'traefik-dashboard.example.test'
 
 # re-configure traefik to skip certificate validation.
 # NB this is needed to expose the k8s dashboard as an ingress at https://kubernetes-dashboard.example.test.
 #    TODO see how to set the CAs in traefik.
 # NB this should never be done at production.
-d['spec']['set']['ssl.insecureSkipVerify'] = 'true'
+values['ssl']['insecureSkipVerify'] = True
+
+# save values back.
+config = io.StringIO()
+yaml.dump(values, config, default_flow_style=False)
+d['spec']['valuesContent'] = config.getvalue()
 
 # show the differences and save the modified yaml file.
 config = io.StringIO()
