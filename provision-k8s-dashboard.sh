@@ -51,10 +51,10 @@ kubectl \
 # see https://docs.traefik.io/providers/kubernetes-ingress/
 # see https://docs.traefik.io/routing/providers/kubernetes-crd/
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#ingress-v1-networking-k8s-io
 kubectl apply -n kubernetes-dashboard -f - <<'EOF'
 kind: Ingress
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 metadata:
   name: kubernetes-dashboard
 spec:
@@ -67,7 +67,11 @@ spec:
     - host: kubernetes-dashboard.example.test
       http:
         paths:
-          - backend:
-              serviceName: kubernetes-dashboard
-              servicePort: 443
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard
+                port:
+                  number: 443
 EOF
