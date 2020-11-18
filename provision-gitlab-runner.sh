@@ -5,9 +5,9 @@ set -euxo pipefail
 # NB this only works when https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant
 [ -f /vagrant/tmp/gitlab-runners-registration-token.txt ] || exit 0
 
-gitlab_runner_chart_version="${1:-0.22.0}"; shift
-gitlab_fqdn="${1:-gitlab.example.com}"; shift
-gitlab_ip="${1:-10.10.9.99}"; shift
+gitlab_runner_chart_version="${1:-0.22.0}"; shift || true
+gitlab_fqdn="${1:-gitlab.example.com}"; shift || true
+gitlab_ip="${1:-10.10.9.99}"; shift || true
 gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
 
 # configure the dns.
@@ -51,7 +51,7 @@ certsSecretName: gitlab-runner-certs
 rbac:
   create: true
 runners:
-  image: ubuntu:18.04
+  image: ubuntu:20.04
   tags: "k8s,k3s"
   locked: false
 EOF
