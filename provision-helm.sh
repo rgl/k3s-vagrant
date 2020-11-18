@@ -4,7 +4,7 @@ set -eu
 #
 # deploy helm.
 
-helm_version="${1:-v3.3.4}"; shift || true
+helm_version="${1:-v3.4.1}"; shift || true
 
 # install helm.
 # see https://helm.sh/docs/intro/install/
@@ -22,12 +22,6 @@ install helm /usr/local/bin
 # install the bash completion script.
 apt-get install -y bash-completion
 helm completion bash >/usr/share/bash-completion/completions/helm
-
-# add chart repositories.
-# see https://helm.sh/docs/intro/quickstart/
-echo "adding repositories..."
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-helm repo update
 
 # kick the tires.
 printf "#\n# helm version\n#\n"
