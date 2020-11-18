@@ -22,7 +22,7 @@ Optionally, start the [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant
 Launch the environment:
 
 ```bash
-time vagrant up --no-destroy-on-error --provider=libvirt # or --provider=virtualbox
+time vagrant up --no-destroy-on-error --no-tty --provider=libvirt # or --provider=virtualbox
 ```
 
 ## Traefik Dashboard
@@ -99,5 +99,5 @@ k9s
 # Reference
 
 * [k3s Installation and Configuration Options](https://rancher.com/docs/k3s/latest/en/installation/install-options/)
-* [k3s Configuration](https://rancher.com/docs/k3s/latest/en/configuration/)
+* [k3s Advanced Options and Configuration](https://rancher.com/docs/k3s/latest/en/advanced/)
 * [k3s Under the Hood: Building a Product-grade Lightweight Kubernetes Distro (KubeCon NA 2019)](https://www.youtube.com/watch?v=-HchRyqNtkU)
