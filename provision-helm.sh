@@ -1,10 +1,10 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 
 #
 # deploy helm.
 
-helm_version="${1:-v3.4.1}"; shift || true
+helm_version="${1:-v3.6.3}"; shift || true
 
 # install helm.
 # see https://helm.sh/docs/intro/install/
