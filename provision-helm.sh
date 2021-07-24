@@ -20,7 +20,6 @@ esac
 install helm /usr/local/bin
 
 # install the bash completion script.
-apt-get install -y bash-completion
 helm completion bash >/usr/share/bash-completion/completions/helm
 
 # kick the tires.

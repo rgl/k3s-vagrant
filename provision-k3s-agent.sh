@@ -49,6 +49,10 @@ systemctl cat k3s-agent
 # e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
 $SHELL -c 'while [ -z "$(crictl pods --label app=svclb-traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
+# install the bash completion scripts.
+crictl completion bash >/usr/share/bash-completion/completions/crictl
+kubectl completion bash >/usr/share/bash-completion/completions/kubectl
+
 # list runnnig pods.
 crictl pods
 

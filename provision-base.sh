@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
@@ -23,6 +23,9 @@ apt-get install -y jq
 
 # install curl.
 apt-get install -y curl
+
+# install the bash completion.
+apt-get install -y bash-completion
 
 # install vim.
 apt-get install -y --no-install-recommends vim

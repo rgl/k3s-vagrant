@@ -171,6 +171,10 @@ EOF
 source /etc/profile.d/krew.sh
 kubectl krew version
 
+# install the bash completion scripts.
+crictl completion bash >/usr/share/bash-completion/completions/crictl
+kubectl completion bash >/usr/share/bash-completion/completions/kubectl
+
 # symlink the default kubeconfig path so local tools like k9s can easily
 # find it without exporting the KUBECONFIG environment variable.
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
