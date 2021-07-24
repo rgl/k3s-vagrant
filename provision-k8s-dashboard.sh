@@ -1,7 +1,7 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
-kubernetes_dashboard_version="${1:-v2.0.4}"; shift || true
+kubernetes_dashboard_version="${1:-v2.3.1}"; shift || true
 kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard/$kubernetes_dashboard_version/aio/deploy/recommended.yaml"
 
 # install the kubernetes dashboard.
@@ -51,19 +51,15 @@ kubectl \
 # see https://docs.traefik.io/providers/kubernetes-ingress/
 # see https://docs.traefik.io/routing/providers/kubernetes-crd/
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#ingress-v1-networking-k8s-io
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#ingress-v1-networking-k8s-io
 kubectl apply -n kubernetes-dashboard -f - <<'EOF'
-kind: Ingress
 apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: kubernetes-dashboard
 spec:
   rules:
     # NB you can use any other host, but you have to make sure DNS resolves to one of k8s cluster IP addresses.
-    # NB you can see the traefik configuration with:
-    #       kubectl --namespace kube-system get $(kubectl --namespace kube-system get pods -l app=traefik -o name) -o yaml
-    #       kubectl --namespace kube-system get configMap/traefik -o yaml
-    #       kubectl --namespace kube-system logs $(kubectl --namespace kube-system get pods -l app=traefik -o name)
     - host: kubernetes-dashboard.example.test
       http:
         paths:

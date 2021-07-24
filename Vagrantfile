@@ -12,13 +12,13 @@ end
 
 # see https://get.k3s.io/
 # see https://update.k3s.io/v1-release/channels
-# see https://github.com/rancher/k3s/releases
+# see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
-k3s_version = 'v1.19.3+k3s2'
+k3s_version = 'v1.21.3+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.4.1'
 # see https://github.com/kubernetes/dashboard/releases
-k8s_dashboard_version = 'v2.0.4'
+k8s_dashboard_version = 'v2.3.1'
 # see https://github.com/derailed/k9s/releases
 k9s_version = 'v0.23.10'
 # see https://github.com/kubernetes-sigs/krew/releases

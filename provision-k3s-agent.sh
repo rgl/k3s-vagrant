@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 k3s_channel="$1"; shift
 k3s_version="$1"; shift
@@ -27,7 +27,7 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
+curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_CHANNEL="$k3s_channel" \
         INSTALL_K3S_VERSION="$k3s_version" \

@@ -1,8 +1,8 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 k3s_channel="${1:-latest}"; shift
-k3s_version="${1:-v1.19.3+k3s2}"; shift
+k3s_version="${1:-v1.21.3+k3s1}"; shift
 k3s_token="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.4.0}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
@@ -26,17 +26,17 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
-# see server arguments at e.g. https://github.com/rancher/k3s/blob/v1.19.3+k3s2/pkg/cli/cmds/server.go#L71
+# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.21.3+k3s1/pkg/cli/cmds/server.go#L85
 # or run k3s server --help
-# see https://rancher.com/docs/k3s/latest/en/configuration/
-curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh \
+# see https://rancher.com/docs/k3s/latest/en/installation/install-options/
+# see https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
+curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_CHANNEL="$k3s_channel" \
         INSTALL_K3S_VERSION="$k3s_version" \
         K3S_TOKEN="$k3s_token" \
         sh -s -- \
             server \
-            --no-deploy traefik \
             --node-ip "$ip_address" \
             --cluster-cidr '10.12.0.0/16' \
             --service-cidr '10.13.0.0/16' \
@@ -48,7 +48,7 @@ curl -sfL https://raw.githubusercontent.com/rancher/k3s/$k3s_version/install.sh 
 systemctl cat k3s
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    master   3m    v1.19.3+k3s2
+# e.g. s1     Ready    control-plane,master   3m    v1.21.3+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -56,13 +56,16 @@ $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready.
 $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespace kube-system | grep -E "\s+Running\s+")" ]; do sleep 3; done'
 
 # install traefik as the k8s ingress controller.
-# see https://docs.traefik.io/v1.7/configuration/api/
-# see https://github.com/rancher/k3s/issues/350#issuecomment-511218588
-# see https://github.com/rancher/k3s/blob/v1.19.3+k3s2/scripts/download#L16
-# see https://github.com/helm/charts/tree/master/stable/traefik
-# see https://kubernetes-charts.storage.googleapis.com/traefik-1.81.0.tgz
-echo 'patching traefik to expose its api/dashboard at http://traefik-dashboard.example.test...'
-wget -q https://raw.githubusercontent.com/rancher/k3s/$k3s_version/manifests/traefik.yaml
+# NB this is changing the /var/lib/rancher/k3s/server/manifests/traefik.yaml file
+#    which will eventually be picked up by k3s, which will apply it using
+#    something equivalent to:
+#       kubectl -n kube-system apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
+# see https://doc.traefik.io/traefik/v2.4/operations/api/
+# see https://github.com/k3s-io/k3s/issues/350#issuecomment-511218588
+# see https://github.com/k3s-io/k3s/blob/v1.21.3+k3s1/scripts/download#L41
+# see https://github.com/k3s-io/k3s/blob/v1.21.3+k3s1/manifests/traefik.yaml
+# see https://github.com/traefik/traefik-helm-chart/blob/v9.18.2/traefik/values.yaml
+echo 'configuring traefik...'
 apt-get install -y python3-yaml
 python3 - <<'EOF'
 import difflib
@@ -70,20 +73,39 @@ import io
 import sys
 import yaml
 
-config_orig = open('traefik.yaml', 'r', encoding='utf-8').read()
-d = yaml.load(config_orig)
+config_path = '/var/lib/rancher/k3s/server/manifests/traefik.yaml'
+config_orig = open(config_path, 'r', encoding='utf-8').read()
 
-# re-configure traefik to start the api/dashboard.
+documents = list(yaml.load_all(config_orig))
+d = documents[1]
 values = yaml.load(d['spec']['valuesContent'])
-values['dashboard'] = {}
-values['dashboard']['enabled'] = True
-values['dashboard']['domain'] = 'traefik-dashboard.example.test'
 
-# re-configure traefik to skip certificate validation.
-# NB this is needed to expose the k8s dashboard as an ingress at https://kubernetes-dashboard.example.test.
-#    TODO see how to set the CAs in traefik.
+# configure logging.
+# NB you can see the logs with:
+#       kubectl -n kube-system logs -f -l app.kubernetes.io/name=traefik
+values['logs'] = {
+    'general': {
+        'level': 'WARN',
+    },
+    'access': {
+        'enabled': True,
+    },
+}
+
+# configure traefik to skip certificate validation.
+# NB this is needed to expose the k8s dashboard as an ingress at
+#    https://kubernetes-dashboard.example.test.
+# NB without this, traefik returns "internal server error".
+# TODO see how to set the CAs in traefik.
 # NB this should never be done at production.
-values['ssl']['insecureSkipVerify'] = True
+values['additionalArguments'] = [
+    '--serverstransport.insecureskipverify=true'
+]
+
+# expose the traefik port so we can access the api/dashboard from an ingress.
+values['ports']['traefik'] = {
+    'expose': True,
+}
 
 # save values back.
 config = io.StringIO()
@@ -92,13 +114,45 @@ d['spec']['valuesContent'] = config.getvalue()
 
 # show the differences and save the modified yaml file.
 config = io.StringIO()
-yaml.dump(d, config, default_flow_style=False)
+yaml.dump_all(documents, config, default_flow_style=False)
 config = config.getvalue()
 sys.stdout.writelines(difflib.unified_diff(config_orig.splitlines(1), config.splitlines(1)))
-open('traefik.yaml', 'w', encoding='utf-8').write(config)
+open(config_path, 'w', encoding='utf-8').write(config)
 EOF
-kubectl -n kube-system apply -f traefik.yaml
-rm traefik.yaml
+
+# create the traefik ingress to access the traefik api/dashboard endpoints.
+# NB you must add any of the cluster node IP addresses to your computer hosts file, e.g.:
+#       10.10.10.101 traefik.example.test
+#    and access it as:
+#       https://traefik.example.test/api/
+#       https://traefik.example.test/dashboard/
+# see kubectl get -n kube-system service traefik -o yaml
+# see https://github.com/traefik/traefik-helm-chart/tree/v9.18.2#exposing-the-traefik-dashboard
+# see https://kubernetes.io/docs/concepts/services-networking/ingress/
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#ingress-v1-networking-k8s-io
+kubectl -n kube-system apply -f - <<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik
+spec:
+  rules:
+    # NB you can use any other host, but you have to make sure DNS resolves to one of k8s cluster IP addresses.
+    # NB you can see the traefik configuration with:
+    #       kubectl --namespace kube-system get configmap/chart-values-traefik -o yaml
+    #       kubectl --namespace kube-system get pods -l app.kubernetes.io/name=traefik -o yaml
+    #       kubectl --namespace kube-system logs -l app.kubernetes.io/name=traefik
+    - host: traefik.example.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: traefik
+                port:
+                  name: traefik
+EOF
 
 # wait for the svclb-traefik pod to be Running.
 # e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
@@ -122,7 +176,7 @@ kubectl krew version
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
 # save kubeconfig in the host.
-# NB the default users are generated at https://github.com/rancher/k3s/blob/v1.19.3+k3s2/pkg/daemons/control/server.go#L448
+# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.21.3+k3s1/pkg/daemons/control/deps/deps.go#L145
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd
 mkdir -p /vagrant/tmp
 python3 - <<EOF
@@ -177,7 +231,7 @@ kubectl -n kube-system get secret
 # list all objects.
 # NB without this hugly redirect the kubectl output will be all messed
 #    when used from a vagrant session.
-kubectl get all --all-namespaces >/tmp/kubectl-$$.tmp; cat /tmp/kubectl-$$.tmp; rm /tmp/kubectl-$$.tmp
+kubectl get all --all-namespaces
 
 # really get all objects.
 # see https://github.com/corneliusweig/ketall/blob/master/doc/USAGE.md
@@ -188,7 +242,7 @@ kubectl get-all
 kubectl get svc
 
 # list running pods.
-kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -o wide
 
 # list runnnig pods.
 crictl pods
