@@ -37,6 +37,7 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
         K3S_TOKEN="$k3s_token" \
         sh -s -- \
             server \
+            --node-taint CriticalAddonsOnly=true:NoExecute \
             --node-ip "$ip_address" \
             --cluster-cidr '10.12.0.0/16' \
             --service-cidr '10.13.0.0/16' \
@@ -153,10 +154,6 @@ spec:
                 port:
                   name: traefik
 EOF
-
-# wait for the svclb-traefik pod to be Running.
-# e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
-$SHELL -c 'while [ -z "$(crictl pods --label app=svclb-traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
 # install the krew kubectl package manager.
 echo "installing the krew $krew_version kubectl package manager..."

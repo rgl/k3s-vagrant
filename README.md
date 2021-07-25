@@ -27,6 +27,8 @@ Launch the environment:
 time vagrant up --no-destroy-on-error --no-tty --provider=libvirt # or --provider=virtualbox
 ```
 
+**NB** The server nodes (e.g. `s1`) are [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to prevent them from executing non control-plane workloads. That kind of workload is executed in the agent nodes (e.g. `a1`).
+
 ## Traefik Dashboard
 
 Access the Traefik Dashboard at:

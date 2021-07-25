@@ -23,7 +23,7 @@ helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
 #     NAME                 CHART VERSION APP VERSION DESCRIPTION  
-#     gitlab/gitlab-runner 0.31.0        13.5.0      GitLab Runner
+#     gitlab/gitlab-runner 0.31.0        14.1.0      GitLab Runner
 helm search repo gitlab/gitlab-runner --versions | head -10
 
 # create the namespace.
@@ -64,9 +64,3 @@ helm install \
   --version $gitlab_runner_chart_version \
   --namespace gitlab-runner \
   --values gitlab-runner-values.yml
-
-# wait for it to deploy.
-# NB you can troubleshoot with:
-#       kubectl get events --all-namespaces --watch
-#       kubectl -n gitlab-runner get events --watch
-kubectl -n gitlab-runner rollout status deployment gitlab-runner-gitlab-runner
