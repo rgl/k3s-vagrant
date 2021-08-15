@@ -43,13 +43,16 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             --service-cidr '10.13.0.0/16' \
             --cluster-dns '10.13.0.10' \
             --cluster-domain 'cluster.local' \
-            --flannel-iface 'eth1'
+            --flannel-iface 'eth1' \
+            --flannel-backend 'host-gw'
 
 # see the systemd unit.
 systemctl cat k3s
 
 # check whether this system has the k3s requirements.
-k3s check-config
+# NB we ignore the result for now, because its bogus on debian 11.
+#    see https://github.com/k3s-io/k3s/issues/3897
+k3s check-config || true
 
 # wait for this node to be Ready.
 # e.g. s1     Ready    control-plane,master   3m    v1.21.4+k3s1

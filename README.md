@@ -1,4 +1,9 @@
-# k3s-vagrant
+# About
+
+This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wrapped in a Vagrant environment.
+
+**NB** The `vxlan` flannel backend [seems to be broken in Debian 11](https://github.com/k3s-io/k3s/issues/3863). So this is using the `host-gw` flannel backend.
+
 # Usage
 
 Configure your hosts file with:
@@ -9,7 +14,7 @@ Configure your hosts file with:
 10.11.0.101 kubernetes-dashboard.example.test
 ```
 
-Install the base [debian vagrant box](https://github.com/rgl/debian-vagrant).
+Install the base [Debian 11 (Bullseye) vagrant box](https://github.com/rgl/debian-vagrant).
 
 Install the required vagrant plugins:
 

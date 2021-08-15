@@ -39,7 +39,7 @@ agent_node_ip_address   = IPAddr.new first_agent_node_ip
 k3s_token               = get_or_generate_k3s_token
 
 Vagrant.configure(2) do |config|
-  config.vm.box = 'debian-10-amd64'
+  config.vm.box = 'debian-11-amd64'
 
   config.vm.provider 'libvirt' do |lv, config|
     lv.cpus = 2
@@ -69,7 +69,6 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
-      config.vm.provision 'shell', path: 'provision-iptables-legacy.sh'
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         k3s_channel,
@@ -100,7 +99,6 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
-      config.vm.provision 'shell', path: 'provision-iptables-legacy.sh'
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,
