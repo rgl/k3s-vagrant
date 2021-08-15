@@ -48,6 +48,9 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
 # see the systemd unit.
 systemctl cat k3s
 
+# check whether this system has the k3s requirements.
+k3s check-config
+
 # wait for this node to be Ready.
 # e.g. s1     Ready    control-plane,master   3m    v1.21.3+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'

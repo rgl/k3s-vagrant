@@ -41,6 +41,9 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
 # see the systemd unit.
 systemctl cat k3s-agent
 
+# check whether this system has the k3s requirements.
+k3s check-config
+
 # NB do not try to use kubectl on a agent node, as kubectl does not work on a
 #    agent node without a proper kubectl configuration (which you could copy
 #    from the server).

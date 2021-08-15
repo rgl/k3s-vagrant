@@ -69,6 +69,7 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
+      config.vm.provision 'shell', path: 'provision-iptables-legacy.sh'
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         k3s_channel,
@@ -99,6 +100,7 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
+      config.vm.provision 'shell', path: 'provision-iptables-legacy.sh'
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,
