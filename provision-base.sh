@@ -59,3 +59,6 @@ set completion-ignore-case on
 "\eOD": backward-word
 "\eOC": forward-word
 EOF
+
+# install useful tools.
+apt-get install -y --no-install-recommends tcpdump traceroute iptables
