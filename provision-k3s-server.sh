@@ -123,10 +123,18 @@ EOF
 
 # create the traefik ingress to access the traefik api/dashboard endpoints.
 # NB you must add any of the cluster node IP addresses to your computer hosts file, e.g.:
-#       10.10.10.101 traefik.example.test
+#       10.11.10.101 traefik.example.test
 #    and access it as:
-#       https://traefik.example.test/api/
 #       https://traefik.example.test/dashboard/
+# NB you can also access by IP address as:
+#       http://10.11.0.101:9000/dashboard/   # s1 node
+#       http://10.11.0.201:9000/dashboard/   # a1 node
+#       http://10.11.0.101:9000/ping
+#       http://10.11.0.101:9000/api/version
+#       http://10.11.0.101:9000/api/overview
+#       http://10.11.0.101:9000/api/http/routers
+#       http://10.11.0.101:9000/api/http/services
+# see https://doc.traefik.io/traefik/operations/api/#endpoints
 # see kubectl get -n kube-system service traefik -o yaml
 # see https://github.com/traefik/traefik-helm-chart/tree/v9.18.2#exposing-the-traefik-dashboard
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/

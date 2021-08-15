@@ -44,7 +44,7 @@ kubectl \
 
 # expose the kubernetes dashboard at kubernetes-dashboard.example.test.
 # NB you must add any of the cluster node IP addresses to your computer hosts file, e.g.:
-#       10.10.10.101 kubernetes-dashboard.example.test
+#       10.11.10.101 kubernetes-dashboard.example.test
 #    and access it as:
 #       https://kubernetes-dashboard.example.test
 # see kubectl get -n kubernetes-dashboard service/kubernetes-dashboard -o yaml
