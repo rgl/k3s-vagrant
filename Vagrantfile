@@ -14,7 +14,7 @@ end
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
-k3s_version = 'v1.21.3+k3s1'
+k3s_version = 'v1.21.4+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.6.3'
 # see https://github.com/kubernetes/dashboard/releases
