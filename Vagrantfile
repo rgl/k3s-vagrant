@@ -32,6 +32,11 @@ gitlab_runner_chart_version = '0.31.0'
 gitlab_fqdn = 'gitlab.example.com'
 gitlab_ip = '10.10.9.99'
 
+# set the flannel backend. use one of:
+# * host-gw:   non-secure network (needs ethernet (L2) connectivity between nodes).
+# * wireguard:     secure network (needs UDP (L3) connectivity between nodes).
+flannel_backend = 'host-gw'
+
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
 first_server_node_ip    = '10.11.0.101'
@@ -73,12 +78,14 @@ Vagrant.configure(2) do |config|
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
       config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         n == 1 ? "cluster-init" : "cluster-join",
         k3s_channel,
         k3s_version,
         k3s_token,
+        flannel_backend,
         ip_address,
         krew_version
       ]
@@ -107,6 +114,7 @@ Vagrant.configure(2) do |config|
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
       config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,
         k3s_version,
