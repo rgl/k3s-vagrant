@@ -4,8 +4,8 @@ set -euxo pipefail
 k3s_channel="$1"; shift
 k3s_version="$1"; shift
 k3s_token="$1"; shift
-k3s_url="$1"; shift
 ip_address="$1"; shift
+k3s_url="https://s1.$(hostname --domain):6443"
 
 # configure the motd.
 # NB this was generated at http://patorjk.com/software/taag/#p=display&f=Big&t=k3s%0Aagent.

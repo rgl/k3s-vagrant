@@ -23,6 +23,9 @@ k8s_dashboard_version = 'v2.3.1'
 k9s_version = 'v0.24.15'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.4.1'
+# see https://github.com/etcd-io/etcd/releases
+# NB make sure you use the same version as k3s.
+etcdctl_version = 'v3.4.13'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 gitlab_runner_chart_version = '0.31.0'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
@@ -70,7 +73,9 @@ Vagrant.configure(2) do |config|
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
       config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
+        n == 1 ? "cluster-init" : "cluster-join",
         k3s_channel,
         k3s_version,
         k3s_token,
@@ -78,9 +83,11 @@ Vagrant.configure(2) do |config|
         krew_version
       ]
       config.vm.provision 'shell', path: 'provision-helm.sh', args: [helm_version] # NB this might not really be needed, as rancher has a HelmChart CRD.
-      config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
       config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
-      config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
+      if n == 1
+        config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
+        config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
+      end
     end
   end
 
@@ -104,7 +111,6 @@ Vagrant.configure(2) do |config|
         k3s_channel,
         k3s_version,
         k3s_token,
-        "https://s1.example.test:6443",
         ip_address
       ]
     end
