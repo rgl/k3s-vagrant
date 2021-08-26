@@ -4,6 +4,7 @@ set -euxo pipefail
 k3s_channel="$1"; shift
 k3s_version="$1"; shift
 k3s_token="$1"; shift
+flannel_backend="$1"; shift
 ip_address="$1"; shift
 k3s_url="https://s1.$(hostname --domain):6443"
 
@@ -37,6 +38,11 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             agent \
             --node-ip "$ip_address" \
             --flannel-iface 'eth1'
+
+# disable vxlan tx offloading.
+if [ $flannel_backend == vxlan ]; then
+    /vagrant/provision-flannel-disable-tx-checksum-offload.sh
+fi
 
 # see the systemd unit.
 systemctl cat k3s-agent

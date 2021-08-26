@@ -34,6 +34,7 @@ gitlab_ip = '10.10.9.99'
 
 # set the flannel backend. use one of:
 # * host-gw:   non-secure network (needs ethernet (L2) connectivity between nodes).
+# * vxlan:     non-secure network (needs UDP (L3) connectivity between nodes).
 # * wireguard:     secure network (needs UDP (L3) connectivity between nodes).
 flannel_backend = 'host-gw'
 
@@ -119,6 +120,7 @@ Vagrant.configure(2) do |config|
         k3s_channel,
         k3s_version,
         k3s_token,
+        flannel_backend,
         ip_address
       ]
     end

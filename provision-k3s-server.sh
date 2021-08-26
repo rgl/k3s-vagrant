@@ -60,6 +60,11 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             --flannel-backend $flannel_backend \
             $k3s_extra_args
 
+# disable vxlan tx offloading.
+if [ $flannel_backend == vxlan ]; then
+    /vagrant/provision-flannel-disable-tx-checksum-offload.sh
+fi
+
 # see the systemd unit.
 systemctl cat k3s
 
