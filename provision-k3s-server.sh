@@ -235,20 +235,10 @@ EOF
 kubectl cluster-info
 
 # list etcd members.
-etcdctl \
-  --cert /var/lib/rancher/k3s/server/tls/etcd/server-client.crt \
-  --key /var/lib/rancher/k3s/server/tls/etcd/server-client.key \
-  --cacert /var/lib/rancher/k3s/server/tls/etcd/server-ca.crt \
-  --write-out table \
-  member list
+etcdctl --write-out table member list
 
 # show the endpoint status.
-etcdctl \
-  --cert /var/lib/rancher/k3s/server/tls/etcd/server-client.crt \
-  --key /var/lib/rancher/k3s/server/tls/etcd/server-client.key \
-  --cacert /var/lib/rancher/k3s/server/tls/etcd/server-ca.crt \
-  --write-out table \
-  endpoint status
+etcdctl --write-out table endpoint status
 
 # list nodes.
 kubectl get nodes -o wide
