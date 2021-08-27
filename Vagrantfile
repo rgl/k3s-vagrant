@@ -76,7 +76,12 @@ Vagrant.configure(2) do |config|
       end
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
-      config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
+      config.vm.provision 'hosts' do |hosts|
+        hosts.autoconfigure = true
+        hosts.sync_hosts = true
+        hosts.add_localhost_hostnames = false
+        hosts.add_host gitlab_ip, [gitlab_fqdn]
+      end
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
@@ -112,7 +117,12 @@ Vagrant.configure(2) do |config|
       end
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
-      config.vm.provision 'hosts', :sync_hosts => true, :add_localhost_hostnames => false
+      config.vm.provision 'hosts' do |hosts|
+        hosts.autoconfigure = true
+        hosts.sync_hosts = true
+        hosts.add_localhost_hostnames = false
+        hosts.add_host gitlab_ip, [gitlab_fqdn]
+      end
       config.vm.provision 'shell', path: 'provision-base.sh'
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [

@@ -10,9 +10,6 @@ gitlab_fqdn="${1:-gitlab.example.com}"; shift || true
 gitlab_ip="${1:-10.10.9.99}"; shift || true
 gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
 
-# configure the dns.
-echo "$gitlab_ip $gitlab_fqdn" >>/etc/hosts
-
 # trust the gitlab certificate.
 cp /vagrant/tmp/$gitlab_fqdn-crt.pem /usr/local/share/ca-certificates/$gitlab_fqdn.crt
 update-ca-certificates
@@ -22,7 +19,7 @@ helm repo add gitlab https://charts.gitlab.io/
 helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
-#     NAME                 CHART VERSION APP VERSION DESCRIPTION  
+#     NAME                 CHART VERSION APP VERSION DESCRIPTION
 #     gitlab/gitlab-runner 0.32.0        14.1.0      GitLab Runner
 helm search repo gitlab/gitlab-runner --versions | head -10
 
@@ -35,17 +32,21 @@ metadata:
 EOF
 
 # create the secret for the trusted certificates.
-kubectl \
-  create secret generic gitlab-runner-certs \
+kubectl create secret \
+  generic \
+  gitlab-runner-certs \
   --namespace gitlab-runner \
-  --from-file=$gitlab_fqdn.crt=/usr/local/share/ca-certificates/$gitlab_fqdn.crt
+  --from-file=$gitlab_fqdn.crt=/usr/local/share/ca-certificates/$gitlab_fqdn.crt \
+  --dry-run=client \
+  --output yaml \
+  | kubectl apply -f -
 
 # set the configuration.
 # NB the default values are described at:
 #       https://gitlab.com/gitlab-org/charts/gitlab-runner/-/blob/v0.32.0/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
 cat >gitlab-runner-values.yml <<EOF
-gitlabUrl: https://$gitlab_fqdn/
+gitlabUrl: https://$gitlab_fqdn
 runnerRegistrationToken: "$gitlab_runner_registration_token"
 certsSecretName: gitlab-runner-certs
 rbac:
@@ -58,7 +59,7 @@ EOF
 
 # install.
 # see https://docs.gitlab.com/runner/install/kubernetes.html
-helm install \
+helm upgrade --install \
   gitlab-runner \
   gitlab/gitlab-runner \
   --version $gitlab_runner_chart_version \
