@@ -51,7 +51,7 @@ kubectl \
 # see https://docs.traefik.io/providers/kubernetes-ingress/
 # see https://docs.traefik.io/routing/providers/kubernetes-crd/
 # see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#ingress-v1-networking-k8s-io
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#ingress-v1-networking-k8s-io
 kubectl apply -n kubernetes-dashboard -f - <<'EOF'
 apiVersion: networking.k8s.io/v1
 kind: Ingress
