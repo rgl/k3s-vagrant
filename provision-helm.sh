@@ -22,6 +22,10 @@ install helm /usr/local/bin
 # install the bash completion script.
 helm completion bash >/usr/share/bash-completion/completions/helm
 
+# install the helm-diff plugin.
+# NB this is especially useful for helmfile.
+helm plugin install https://github.com/databus23/helm-diff
+
 # kick the tires.
 printf "#\n# helm version\n#\n"
 helm version

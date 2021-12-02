@@ -17,6 +17,8 @@ k3s_channel = 'latest'
 k3s_version = 'v1.22.1-rc1+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.7.1'
+# see https://github.com/roboll/helmfile/releases
+helmfile_version = 'v0.142.0'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.3.1'
 # see https://github.com/derailed/k9s/releases
@@ -95,6 +97,7 @@ Vagrant.configure(2) do |config|
         krew_version
       ]
       config.vm.provision 'shell', path: 'provision-helm.sh', args: [helm_version] # NB this might not really be needed, as rancher has a HelmChart CRD.
+      config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [helmfile_version]
       config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
       if n == 1
         config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
