@@ -7,7 +7,7 @@ k3s_version="${1:-v1.22.1-rc1+k3s1}"; shift
 k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
-krew_version="${1:-v0.4.1}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
+krew_version="${1:-v0.4.2}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
 fqdn="$(hostname --fqdn)"
 k3s_url="https://s1.$(hostname --domain):6443"
 
@@ -186,7 +186,7 @@ EOF
 # install the krew kubectl package manager.
 echo "installing the krew $krew_version kubectl package manager..."
 apt-get install -y --no-install-recommends git-core
-wget -qO- "https://github.com/kubernetes-sigs/krew/releases/download/$krew_version/krew.tar.gz" | tar xzf - ./krew-linux_amd64
+wget -qO- "https://github.com/kubernetes-sigs/krew/releases/download/$krew_version/krew-linux_amd64.tar.gz" | tar xzf - ./krew-linux_amd64
 wget -q "https://github.com/kubernetes-sigs/krew/releases/download/$krew_version/krew.yaml"
 ./krew-linux_amd64 install --manifest=krew.yaml
 rm krew-linux_amd64
