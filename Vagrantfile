@@ -16,7 +16,7 @@ end
 k3s_channel = 'latest'
 k3s_version = 'v1.22.1-rc1+k3s1'
 # see https://github.com/helm/helm/releases
-helm_version = 'v3.6.3'
+helm_version = 'v3.7.1'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.3.1'
 # see https://github.com/derailed/k9s/releases
