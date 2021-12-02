@@ -27,7 +27,7 @@ krew_version = 'v0.4.1'
 # NB make sure you use the same version as k3s.
 etcdctl_version = 'v3.4.13'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
-gitlab_runner_chart_version = '0.32.0'
+gitlab_runner_chart_version = '0.35.0'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 gitlab_fqdn = 'gitlab.example.com'
 gitlab_ip = '10.10.9.99'
