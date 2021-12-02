@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-k9s_version="${1:-v0.24.15}"; shift || true
+k9s_version="${1:-v0.25.7}"; shift || true
 
 # download and install.
 wget -qO- "https://github.com/derailed/k9s/releases/download/$k9s_version/k9s_Linux_x86_64.tar.gz" \

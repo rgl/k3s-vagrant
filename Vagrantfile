@@ -22,7 +22,7 @@ helmfile_version = 'v0.142.0'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.4.0'
 # see https://github.com/derailed/k9s/releases
-k9s_version = 'v0.24.15'
+k9s_version = 'v0.25.7'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.4.1'
 # see https://github.com/etcd-io/etcd/releases
