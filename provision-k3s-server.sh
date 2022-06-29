@@ -7,7 +7,7 @@ k3s_version="${1:-v1.22.4+k3s1}"; shift
 k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
-krew_version="${1:-v0.4.2}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
+krew_version="${1:-v0.4.3}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
 fqdn="$(hostname --fqdn)"
 k3s_url="https://s1.$(hostname --domain):6443"
 
