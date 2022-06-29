@@ -94,12 +94,25 @@ import io
 import sys
 import yaml
 
+# configure the yaml library to write multiline strings using the block scalar
+# style syntax.
+# NB this uses a modified version of https://github.com/yaml/pyyaml/issues/240#issuecomment-1096224358:
+#      * uses the `in` operator.
+def str_presenter(dumper, data):
+    """configures yaml for dumping multiline strings
+    Ref: https://stackoverflow.com/questions/8640959/how-can-i-control-what-scalar-form-pyyaml-uses-for-my-data"""
+    if '\n' in data:
+        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+yaml.add_representer(str, str_presenter)
+yaml.representer.SafeRepresenter.add_representer(str, str_presenter) # to use with safe_dum
+
 config_path = '/var/lib/rancher/k3s/server/manifests/traefik.yaml'
 config_orig = open(config_path, 'r', encoding='utf-8').read()
 
-documents = list(yaml.load_all(config_orig))
+documents = list(yaml.load_all(config_orig, Loader=yaml.FullLoader))
 d = documents[1]
-values = yaml.load(d['spec']['valuesContent'])
+values = yaml.load(d['spec']['valuesContent'], Loader=yaml.FullLoader)
 
 # configure logging.
 # NB you can see the logs with:
