@@ -50,9 +50,9 @@ k3s check-config || true
 #    agent node without a proper kubectl configuration (which you could copy
 #    from the server).
 
-# wait for the svclb-traefik pod to be Running.
-# e.g. eca1ea99515cd       About an hour ago   Ready               svclb-traefik-kz562   kube-system         0
-$SHELL -c 'while [ -z "$(crictl pods --label app=svclb-traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
+# wait for the traefik pod to be Running.
+# e.g. eca1ea99515cd  About an hour ago  Ready  svclb-traefik-50cbe7c8-bgx7j  kube-system  0
+$SHELL -c 'while [ -z "$(crictl pods --label svccontroller.k3s.cattle.io/svcname=traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
 # install the bash completion scripts.
 crictl completion bash >/usr/share/bash-completion/completions/crictl
@@ -63,7 +63,7 @@ crictl pods
 
 # list running containers.
 crictl ps
-k3s ctr containers ls
+ctr containers ls
 
 # show listening ports.
 ss -n --tcp --listening --processes
@@ -76,4 +76,4 @@ free
 
 # show versions.
 crictl version
-k3s ctr version
+ctr version

@@ -3,7 +3,7 @@ set -euxo pipefail
 
 k3s_command="$1"; shift
 k3s_channel="${1:-latest}"; shift
-k3s_version="${1:-v1.22.4+k3s1}"; shift
+k3s_version="${1:-v1.24.2+k3s1}"; shift
 k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
@@ -39,7 +39,7 @@ else
 fi
 
 # install k3s.
-# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.22.4+k3s1/pkg/cli/cmds/server.go#L140
+# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.24.2+k3s1/pkg/cli/cmds/server.go#L140
 # or run k3s server --help
 # see https://rancher.com/docs/k3s/latest/en/installation/install-options/
 # see https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
@@ -69,7 +69,7 @@ systemctl cat k3s
 k3s check-config || true
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    control-plane,master   3m    v1.22.4+k3s1
+# e.g. s1     Ready    control-plane,master   3m    v1.24.2+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -81,11 +81,11 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 #    which will eventually be picked up by k3s, which will apply it using
 #    something equivalent to:
 #       kubectl -n kube-system apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
-# see https://doc.traefik.io/traefik/v2.5/operations/api/
+# see https://doc.traefik.io/traefik/v2.6/operations/api/
 # see https://github.com/k3s-io/k3s/issues/350#issuecomment-511218588
-# see https://github.com/k3s-io/k3s/blob/v1.22.4+k3s1/scripts/download#L47
-# see https://github.com/k3s-io/k3s/blob/v1.22.4+k3s1/manifests/traefik.yaml
-# see https://github.com/traefik/traefik-helm-chart/blob/v10.3.0/traefik/values.yaml
+# see https://github.com/k3s-io/k3s/blob/v1.24.2+k3s1/scripts/download#L47
+# see https://github.com/k3s-io/k3s/blob/v1.24.2+k3s1/manifests/traefik.yaml
+# see https://github.com/traefik/traefik-helm-chart/blob/v10.19.0/traefik/values.yaml
 echo 'configuring traefik...'
 apt-get install -y python3-yaml
 python3 - <<'EOF'
@@ -218,7 +218,7 @@ kubectl completion bash >/usr/share/bash-completion/completions/kubectl
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
 # save kubeconfig in the host.
-# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.22.4+k3s1/pkg/daemons/control/deps/deps.go#L205
+# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.24.2+k3s1/pkg/daemons/control/deps/deps.go#L219-L246
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd
 mkdir -p /vagrant/tmp
 python3 - <<EOF
@@ -297,7 +297,7 @@ crictl pods
 
 # list running containers.
 crictl ps
-k3s ctr containers ls
+ctr containers ls
 
 # show listening ports.
 ss -n --tcp --listening --processes
@@ -314,4 +314,4 @@ free
 # show versions.
 kubectl version
 crictl version
-k3s ctr version
+ctr version
