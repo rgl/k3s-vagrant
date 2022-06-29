@@ -18,7 +18,7 @@ k3s_version = 'v1.22.4+k3s1'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.9.0'
 # see https://github.com/roboll/helmfile/releases
-helmfile_version = 'v0.142.0'
+helmfile_version = 'v0.144.0'
 # see https://github.com/kubernetes/dashboard/releases
 k8s_dashboard_version = 'v2.4.0'
 # see https://github.com/derailed/k9s/releases

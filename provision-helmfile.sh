@@ -4,7 +4,7 @@ set -euo pipefail
 #
 # deploy helmfile.
 
-helmfile_version="${1:-v0.142.0}"; shift || true
+helmfile_version="${1:-v0.144.0}"; shift || true
 
 # install helmfile.
 # see https://github.com/roboll/helmfile#installation
