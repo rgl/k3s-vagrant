@@ -26,8 +26,8 @@ k9s_version = 'v0.25.20'
 # see https://github.com/kubernetes-sigs/krew/releases
 krew_version = 'v0.4.3'
 # see https://github.com/etcd-io/etcd/releases
-# NB make sure you use the same version as k3s.
-etcdctl_version = 'v3.5.0'
+# NB make sure you use a version compatible with k3s.
+etcdctl_version = 'v3.5.4'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 gitlab_runner_chart_version = '0.35.0'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
