@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-kubernetes_dashboard_version="${1:-v2.4.0}"; shift || true
+kubernetes_dashboard_version="${1:-v2.6.0}"; shift || true
 kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard/$kubernetes_dashboard_version/aio/deploy/recommended.yaml"
 
 # install the kubernetes dashboard.
