@@ -10,15 +10,24 @@ kubernetes_dashboard_url="https://raw.githubusercontent.com/kubernetes/dashboard
 # see https://github.com/kubernetes/dashboard/releases
 kubectl apply -f "$kubernetes_dashboard_url"
 
-# create the admin user.
-# see https://github.com/kubernetes/dashboard/wiki/Creating-sample-user
-# see https://github.com/kubernetes/dashboard/wiki/Access-control
-kubectl apply -f - <<'EOF'
+# create the admin user for use in the kubernetes-dashboard.
+# see https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+# see https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/README.md
+# see https://kubernetes.io/docs/concepts/configuration/secret/#service-account-token-secrets
+kubectl apply -n kubernetes-dashboard -f - <<'EOF'
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: admin
-  namespace: kubernetes-dashboard
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: admin
+  annotations:
+    kubernetes.io/service-account.name: admin
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -34,12 +43,9 @@ subjects:
     namespace: kubernetes-dashboard
 EOF
 # save the admin token.
-kubectl \
-  -n kubernetes-dashboard \
-  get \
-  secret \
-  $(kubectl -n kubernetes-dashboard get secret | grep admin-token- | awk '{print $1}') \
-  -o json | jq -r .data.token | base64 --decode \
+kubectl -n kubernetes-dashboard get secret admin -o json \
+  | jq -r .data.token \
+  | base64 --decode \
   >/vagrant/tmp/admin-token.txt
 
 # expose the kubernetes dashboard at kubernetes-dashboard.example.test.
