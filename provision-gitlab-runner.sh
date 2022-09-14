@@ -55,6 +55,10 @@ runners:
   image: ubuntu:20.04
   tags: "k8s,k3s"
   locked: false
+hostAliases:
+  - ip: $gitlab_ip
+    hostnames:
+      - $gitlab_fqdn
 EOF
 
 # install.
