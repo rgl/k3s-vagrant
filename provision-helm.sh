@@ -18,6 +18,7 @@ case `uname -m` in
         ;;
 esac
 install helm /usr/local/bin
+rm helm
 
 # install the bash completion script.
 helm completion bash >/usr/share/bash-completion/completions/helm
