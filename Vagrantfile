@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
         vb.memory = 2*1024
       end
       config.vm.hostname = fqdn
-      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
+      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts' do |hosts|
         hosts.autoconfigure = true
         hosts.sync_hosts = true
@@ -119,7 +119,7 @@ Vagrant.configure(2) do |config|
         vb.memory = 2*1024
       end
       config.vm.hostname = fqdn
-      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
+      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'route', libvirt__dhcp_enabled: false
       config.vm.provision 'hosts' do |hosts|
         hosts.autoconfigure = true
         hosts.sync_hosts = true
