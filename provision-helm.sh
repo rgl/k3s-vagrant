@@ -4,7 +4,7 @@ set -euo pipefail
 #
 # deploy helm.
 
-helm_version="${1:-v3.9.4}"; shift || true
+helm_version="${1:-v3.10.0}"; shift || true
 
 # install helm.
 # see https://helm.sh/docs/intro/install/
