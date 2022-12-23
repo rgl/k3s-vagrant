@@ -52,7 +52,7 @@ certsSecretName: gitlab-runner-certs
 rbac:
   create: true
 runners:
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   tags: "k8s,k3s"
   locked: false
 hostAliases:
