@@ -38,7 +38,7 @@ time vagrant up --no-destroy-on-error --no-tty --provider=libvirt # or --provide
 
 Access the Traefik Dashboard at:
 
-    http://traefik.example.test/dashboard/
+    https://traefik.example.test/dashboard/
 
 ## Rancher Server
 

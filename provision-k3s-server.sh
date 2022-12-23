@@ -3,7 +3,7 @@ set -euxo pipefail
 
 k3s_command="$1"; shift
 k3s_channel="${1:-latest}"; shift
-k3s_version="${1:-v1.25.2+k3s1}"; shift
+k3s_version="${1:-v1.25.5+k3s1}"; shift
 k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
@@ -39,7 +39,7 @@ else
 fi
 
 # install k3s.
-# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.25.2+k3s1/pkg/cli/cmds/server.go#L549-L558
+# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.25.5+k3s1/pkg/cli/cmds/server.go#L557-L566
 # or run k3s server --help
 # see https://rancher.com/docs/k3s/latest/en/installation/install-options/
 # see https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
@@ -69,7 +69,7 @@ systemctl cat k3s
 k3s check-config || true
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    control-plane,master   3m    v1.25.2+k3s1
+# e.g. s1     Ready    control-plane,master   3m    v1.25.5+k3s1
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -81,11 +81,10 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 #    which will eventually be picked up by k3s, which will apply it using
 #    something equivalent to:
 #       kubectl -n kube-system apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
-# see https://doc.traefik.io/traefik/v2.6/operations/api/
+# see https://doc.traefik.io/traefik/v2.9/operations/api/
 # see https://github.com/k3s-io/k3s/issues/350#issuecomment-511218588
-# see https://github.com/k3s-io/k3s/blob/v1.25.2+k3s1/scripts/download#L47
-# see https://github.com/k3s-io/k3s/blob/v1.25.2+k3s1/manifests/traefik.yaml
-# see https://github.com/traefik/traefik-helm-chart/blob/v10.19.0/traefik/values.yaml
+# see https://github.com/k3s-io/k3s/blob/v1.25.5+k3s1/manifests/traefik.yaml
+# see https://github.com/traefik/traefik-helm-chart/blob/v20.3.1/traefik/values.yaml
 echo 'configuring traefik...'
 apt-get install -y python3-yaml
 python3 - <<'EOF'
@@ -136,11 +135,6 @@ values['additionalArguments'] = [
     '--serverstransport.insecureskipverify=true'
 ]
 
-# expose the traefik port so we can access the api/dashboard from an ingress.
-values['ports']['traefik'] = {
-    'expose': True,
-}
-
 # save values back.
 config = io.StringIO()
 yaml.dump(values, config, default_flow_style=False)
@@ -155,45 +149,38 @@ open(config_path, 'w', encoding='utf-8').write(config)
 EOF
 
 # create the traefik ingress to access the traefik api/dashboard endpoints.
+# NB you cannot use kubectl apply here because the traefik CRDs are created
+#    from a non control-plane node. that's why this uses a local manifest
+#    file.
 # NB you must add any of the cluster node IP addresses to your computer hosts file, e.g.:
 #       10.11.10.101 traefik.example.test
 #    and access it as:
 #       https://traefik.example.test/dashboard/
-# NB you can also access by IP address as:
-#       http://10.11.0.101:9000/dashboard/   # s1 node
-#       http://10.11.0.201:9000/dashboard/   # a1 node
-#       http://10.11.0.101:9000/ping
-#       http://10.11.0.101:9000/api/version
-#       http://10.11.0.101:9000/api/overview
-#       http://10.11.0.101:9000/api/http/routers
-#       http://10.11.0.101:9000/api/http/services
+#       https://traefik.example.test/api/version
+#       https://traefik.example.test/api/overview
+#       https://traefik.example.test/api/http/routers
+#       https://traefik.example.test/api/http/services
+# NB you can see the traefik configuration with:
+#       kubectl --namespace kube-system get configmap/chart-values-traefik -o yaml
+#       kubectl --namespace kube-system get pods -l app.kubernetes.io/name=traefik -o yaml
+#       kubectl --namespace kube-system logs -l app.kubernetes.io/name=traefik
 # see https://doc.traefik.io/traefik/operations/api/#endpoints
 # see kubectl get -n kube-system service traefik -o yaml
-# see https://github.com/traefik/traefik-helm-chart/tree/v10.3.0#exposing-the-traefik-dashboard
-# see https://kubernetes.io/docs/concepts/services-networking/ingress/
-# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#ingress-v1-networking-k8s-io
-kubectl -n kube-system apply -f - <<'EOF'
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+# see https://github.com/traefik/traefik-helm-chart/tree/v20.3.1#exposing-the-traefik-dashboard
+cat >/var/lib/rancher/k3s/server/manifests/traefik-local.yaml <<'EOF'
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: traefik
 spec:
-  rules:
-    # NB you can use any other host, but you have to make sure DNS resolves to one of k8s cluster IP addresses.
-    # NB you can see the traefik configuration with:
-    #       kubectl --namespace kube-system get configmap/chart-values-traefik -o yaml
-    #       kubectl --namespace kube-system get pods -l app.kubernetes.io/name=traefik -o yaml
-    #       kubectl --namespace kube-system logs -l app.kubernetes.io/name=traefik
-    - host: traefik.example.test
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: traefik
-                port:
-                  name: traefik
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefik.example.test`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
 EOF
 
 # install the krew kubectl package manager.
@@ -218,7 +205,7 @@ kubectl completion bash >/usr/share/bash-completion/completions/kubectl
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
 # save kubeconfig in the host.
-# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.25.2+k3s1/pkg/daemons/control/deps/deps.go#L219-L246
+# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.25.5+k3s1/pkg/daemons/control/deps/deps.go#L224-L251
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd
 mkdir -p /vagrant/tmp
 python3 - <<EOF
