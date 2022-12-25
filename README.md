@@ -9,7 +9,7 @@ This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wra
 Configure your hosts file with:
 
 ```
-10.11.0.101 s1.example.test
+10.11.0.100 s.example.test
 10.11.0.101 traefik.example.test
 10.11.0.101 kubernetes-dashboard.example.test
 ```
@@ -44,7 +44,7 @@ Access the Traefik Dashboard at:
 
 Access the Rancher Server at:
 
-    https://s1.example.test:6443
+    https://s.example.test:6443
 
 **NB** This is a proxy to the k8s API server (which is running in port 6444).
 
@@ -58,7 +58,7 @@ http \
     --verify tmp/default-ca-crt.pem \
     --cert tmp/default-crt.pem \
     --cert-key tmp/default-key.pem \
-    https://s1.example.test:6443
+    https://s.example.test:6443
 ```
 
 Or with curl:
@@ -68,7 +68,7 @@ curl \
     --cacert tmp/default-ca-crt.pem \
     --cert tmp/default-crt.pem \
     --key tmp/default-key.pem \
-    https://s1.example.test:6443
+    https://s.example.test:6443
 ```
 
 ## Kubernetes Dashboard

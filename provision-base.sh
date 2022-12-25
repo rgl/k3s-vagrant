@@ -61,4 +61,8 @@ set completion-ignore-case on
 EOF
 
 # install useful tools.
-apt-get install -y --no-install-recommends tcpdump traceroute iptables
+apt-get install -y --no-install-recommends \
+    tcpdump \
+    traceroute \
+    iptables \
+    ipvsadm

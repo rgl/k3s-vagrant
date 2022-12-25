@@ -15,6 +15,8 @@ end
 # see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
 k3s_version = 'v1.25.5+k3s1'
+# see https://github.com/kube-vip/kube-vip/releases
+kube_vip_version = 'v0.5.7'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.10.3'
 # see https://github.com/roboll/helmfile/releases
@@ -41,6 +43,9 @@ flannel_backend = 'host-gw'
 
 number_of_server_nodes  = 1
 number_of_agent_nodes   = 2
+
+server_fqdn             = 's.example.test'
+server_vip              = '10.11.0.100'
 first_server_node_ip    = '10.11.0.101'
 first_agent_node_ip     = '10.11.0.201'
 
@@ -82,6 +87,7 @@ Vagrant.configure(2) do |config|
         hosts.autoconfigure = true
         hosts.sync_hosts = true
         hosts.add_localhost_hostnames = false
+        hosts.add_host server_vip, [server_fqdn]
         hosts.add_host gitlab_ip, [gitlab_fqdn]
       end
       config.vm.provision 'shell', path: 'provision-base.sh'
@@ -100,6 +106,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [helmfile_version]
       config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
       if n == 1
+        config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [kube_vip_version, server_vip]
         config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
         config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
       end
@@ -124,6 +131,7 @@ Vagrant.configure(2) do |config|
         hosts.autoconfigure = true
         hosts.sync_hosts = true
         hosts.add_localhost_hostnames = false
+        hosts.add_host server_vip, [server_fqdn]
         hosts.add_host gitlab_ip, [gitlab_fqdn]
       end
       config.vm.provision 'shell', path: 'provision-base.sh'

@@ -9,7 +9,8 @@ flannel_backend="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.4.3}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
 fqdn="$(hostname --fqdn)"
-k3s_url="https://s1.$(hostname --domain):6443"
+k3s_fqdn="s.$(hostname --domain)"
+k3s_url="https://$k3s_fqdn:6443"
 
 # configure the motd.
 # NB this was generated at http://patorjk.com/software/taag/#p=display&f=Big&t=k3s%0Aserver.
@@ -57,7 +58,8 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             --cluster-dns '10.13.0.10' \
             --cluster-domain 'cluster.local' \
             --flannel-iface 'eth1' \
-            --flannel-backend $flannel_backend \
+            --flannel-backend "$flannel_backend" \
+            --tls-san "$k3s_fqdn" \
             $k3s_extra_args
 
 # see the systemd unit.
@@ -222,11 +224,11 @@ for c in d['clusters']:
 for u in d['users']:
     open(f"/vagrant/tmp/{u['name']}-crt.pem", 'wb').write(base64.b64decode(u['user']['client-certificate-data']))
     open(f"/vagrant/tmp/{u['name']}-key.pem", 'wb').write(base64.b64decode(u['user']['client-key-data']))
-    print(f"Kubernetes API Server https://$ip_address:6443 user {u['name']} client certificate in tmp/{u['name']}-*.pem")
+    print(f"Kubernetes API Server $k3s_url user {u['name']} client certificate in tmp/{u['name']}-*.pem")
 
-# set the server ip.
+# set the api-server server.
 for c in d['clusters']:
-    c['cluster']['server'] = 'https://$ip_address:6443'
+    c['cluster']['server'] = '$k3s_url'
 
 yaml.dump(d, open('/vagrant/tmp/admin.conf', 'w'), default_flow_style=False)
 EOF
