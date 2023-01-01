@@ -9,9 +9,9 @@ This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wra
 Configure your hosts file with:
 
 ```
-10.11.0.100 s.example.test
-10.11.0.101 traefik.example.test
-10.11.0.101 kubernetes-dashboard.example.test
+10.11.0.10 s.example.test
+10.11.0.50 traefik.example.test
+10.11.0.50 kubernetes-dashboard.example.test
 ```
 
 Install the base [Debian 11 (Bullseye) vagrant box](https://github.com/rgl/debian-vagrant).

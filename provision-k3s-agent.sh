@@ -27,6 +27,7 @@ cat >/etc/motd <<'EOF'
 EOF
 
 # install k3s.
+# see https://docs.k3s.io/reference/agent-config
 curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_CHANNEL="$k3s_channel" \
@@ -49,10 +50,6 @@ k3s check-config || true
 # NB do not try to use kubectl on a agent node, as kubectl does not work on a
 #    agent node without a proper kubectl configuration (which you could copy
 #    from the server).
-
-# wait for the traefik pod to be Running.
-# e.g. eca1ea99515cd  About an hour ago  Ready  svclb-traefik-50cbe7c8-bgx7j  kube-system  0
-$SHELL -c 'while [ -z "$(crictl pods --label svccontroller.k3s.cattle.io/svcname=traefik | grep -E "\s+Ready\s+")" ]; do sleep 3; done'
 
 # install the bash completion scripts.
 crictl completion bash >/usr/share/bash-completion/completions/crictl

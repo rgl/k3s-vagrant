@@ -42,8 +42,8 @@ fi
 # install k3s.
 # see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.25.5+k3s1/pkg/cli/cmds/server.go#L557-L566
 # or run k3s server --help
-# see https://rancher.com/docs/k3s/latest/en/installation/install-options/
-# see https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
+# see https://docs.k3s.io/installation/configuration
+# see https://docs.k3s.io/reference/server-config
 curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
     | \
         INSTALL_K3S_CHANNEL="$k3s_channel" \
@@ -60,6 +60,7 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             --flannel-iface 'eth1' \
             --flannel-backend "$flannel_backend" \
             --tls-san "$k3s_fqdn" \
+            --disable servicelb \
             $k3s_extra_args
 
 # see the systemd unit.

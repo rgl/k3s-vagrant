@@ -40,6 +40,8 @@ krew_version = 'v0.4.3'
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
 etcdctl_version = 'v3.5.6'
+# see https://artifacthub.io/packages/helm/bitnami/metallb
+metallb_chart_version = '4.1.13'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 gitlab_runner_chart_version = '0.48.0'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
@@ -51,13 +53,14 @@ gitlab_ip = '10.10.9.99'
 # * wireguard:     secure network (needs UDP (L3) connectivity between nodes).
 flannel_backend = 'host-gw'
 
-number_of_server_nodes  = 1
+number_of_server_nodes  = 3
 number_of_agent_nodes   = 2
 
-server_fqdn             = 's.example.test'
-server_vip              = '10.11.0.100'
-first_server_node_ip    = '10.11.0.101'
-first_agent_node_ip     = '10.11.0.201'
+server_fqdn           = 's.example.test'
+server_vip            = '10.11.0.10'
+first_server_node_ip  = '10.11.0.11'
+first_agent_node_ip   = '10.11.0.21'
+lb_ip_range           = '10.11.0.50-10.11.0.250'
 
 server_nodes  = generate_nodes(first_server_node_ip, number_of_server_nodes, 's')
 agent_nodes   = generate_nodes(first_agent_node_ip, number_of_agent_nodes, 'a')
@@ -111,6 +114,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
       if n == 1
         config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [kube_vip_version, server_vip]
+        config.vm.provision 'shell', path: 'provision-metallb.sh', args: [metallb_chart_version, lb_ip_range]
         config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
         config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
       end
