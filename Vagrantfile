@@ -53,6 +53,11 @@ server_node_ip_address  = IPAddr.new first_server_node_ip
 agent_node_ip_address   = IPAddr.new first_agent_node_ip
 k3s_token               = get_or_generate_k3s_token
 
+extra_hosts = """
+#{server_vip} #{server_fqdn}
+#{gitlab_ip} #{gitlab_fqdn}
+"""
+
 Vagrant.configure(2) do |config|
   config.vm.box = 'debian-11-amd64'
 
@@ -83,14 +88,7 @@ Vagrant.configure(2) do |config|
       end
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
-      config.vm.provision 'hosts' do |hosts|
-        hosts.autoconfigure = true
-        hosts.sync_hosts = true
-        hosts.add_localhost_hostnames = false
-        hosts.add_host server_vip, [server_fqdn]
-        hosts.add_host gitlab_ip, [gitlab_fqdn]
-      end
-      config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
@@ -127,14 +125,7 @@ Vagrant.configure(2) do |config|
       end
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
-      config.vm.provision 'hosts' do |hosts|
-        hosts.autoconfigure = true
-        hosts.sync_hosts = true
-        hosts.add_localhost_hostnames = false
-        hosts.add_host server_vip, [server_fqdn]
-        hosts.add_host gitlab_ip, [gitlab_fqdn]
-      end
-      config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,

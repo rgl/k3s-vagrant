@@ -1,6 +1,13 @@
 #!/bin/bash
 set -euxo pipefail
 
+extra_hosts="$1"; shift || true
+
+# set the extra hosts.
+cat >>/etc/hosts <<EOF
+$extra_hosts
+EOF
+
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
 #     dpkg-preconfigure: unable to re-open stdin: No such file or directory
