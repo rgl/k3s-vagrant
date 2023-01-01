@@ -10,6 +10,16 @@ def get_or_generate_k3s_token
   '7e982a7bbac5f385ecbb988f800787bc9bb617552813a63c4469521c53d83b6e'
 end
 
+def generate_nodes(first_ip_address, count, name_prefix)
+  ip_addr = IPAddr.new first_ip_address
+  (1..count).map do |n|
+    ip_address, ip_addr = ip_addr.to_s, ip_addr.succ
+    name = "#{name_prefix}#{n}"
+    fqdn = "#{name}.example.test"
+    [name, fqdn, ip_address, n]
+  end
+end
+
 # see https://get.k3s.io/
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
@@ -49,9 +59,9 @@ server_vip              = '10.11.0.100'
 first_server_node_ip    = '10.11.0.101'
 first_agent_node_ip     = '10.11.0.201'
 
-server_node_ip_address  = IPAddr.new first_server_node_ip
-agent_node_ip_address   = IPAddr.new first_agent_node_ip
-k3s_token               = get_or_generate_k3s_token
+server_nodes  = generate_nodes(first_server_node_ip, number_of_server_nodes, 's')
+agent_nodes   = generate_nodes(first_agent_node_ip, number_of_agent_nodes, 'a')
+k3s_token     = get_or_generate_k3s_token
 
 extra_hosts = """
 #{server_vip} #{server_fqdn}
@@ -74,11 +84,7 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
   end
 
-  (1..number_of_server_nodes).each do |n|
-    name = "s#{n}"
-    fqdn = "#{name}.example.test"
-    ip_address = server_node_ip_address.to_s; server_node_ip_address = server_node_ip_address.succ
-
+  server_nodes.each do |name, fqdn, ip_address, n|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
@@ -111,11 +117,7 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  (1..number_of_agent_nodes).each do |n|
-    name = "a#{n}"
-    fqdn = "#{name}.example.test"
-    ip_address = agent_node_ip_address.to_s; agent_node_ip_address = agent_node_ip_address.succ
-
+  agent_nodes.each do |name, fqdn, ip_address, n|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
