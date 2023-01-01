@@ -61,6 +61,7 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
             --flannel-backend "$flannel_backend" \
             --tls-san "$k3s_fqdn" \
             --disable servicelb \
+            --kube-proxy-arg proxy-mode=ipvs \
             $k3s_extra_args
 
 # see the systemd unit.

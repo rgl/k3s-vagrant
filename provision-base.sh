@@ -72,4 +72,5 @@ apt-get install -y --no-install-recommends \
     tcpdump \
     traceroute \
     iptables \
-    ipvsadm
+    ipvsadm \
+    ipset
