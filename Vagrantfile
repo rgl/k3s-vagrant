@@ -39,7 +39,7 @@ k9s_version = 'v0.26.7'
 krew_version = 'v0.4.3'
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
-etcdctl_version = 'v3.5.6'
+etcdctl_version = 'v3.5.7'
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 metallb_chart_version = '4.1.13'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
