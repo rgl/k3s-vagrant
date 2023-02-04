@@ -26,7 +26,7 @@ end
 k3s_channel = 'latest'
 k3s_version = 'v1.26.1+k3s1'
 # see https://github.com/kube-vip/kube-vip/releases
-kube_vip_version = 'v0.5.7'
+kube_vip_version = 'v0.5.8'
 # see https://github.com/helm/helm/releases
 helm_version = 'v3.10.3'
 # see https://github.com/roboll/helmfile/releases
