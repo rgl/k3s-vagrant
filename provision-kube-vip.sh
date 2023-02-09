@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-kube_vip_version="${1:-v0.5.8}"; shift || true
+kube_vip_version="${1:-v0.5.9}"; shift || true
 vip="${1:-10.11.0.100}"; shift || true
 kube_vip_rbac_url="https://raw.githubusercontent.com/kube-vip/kube-vip/$kube_vip_version/docs/manifests/rbac.yaml"
 kube_vip_image="ghcr.io/kube-vip/kube-vip:$kube_vip_version"
