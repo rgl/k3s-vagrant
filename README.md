@@ -2,8 +2,6 @@
 
 This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wrapped in a Vagrant environment.
 
-**NB** The `vxlan` flannel backend [seems to be broken in Debian 11](https://github.com/k3s-io/k3s/issues/3863).
-
 # Usage
 
 Configure your hosts file with:

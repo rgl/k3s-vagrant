@@ -50,8 +50,10 @@ gitlab_ip = '10.10.9.99'
 
 # set the flannel backend. use one of:
 # * host-gw:          non-secure network (needs ethernet (L2) connectivity between nodes).
+# * vxlan:            non-secure network (needs UDP (L3) connectivity between nodes).
 # * wireguard-native: secure network (needs UDP (L3) connectivity between nodes).
 flannel_backend = 'host-gw'
+#flannel_backend = 'vxlan'
 #flannel_backend = 'wireguard-native'
 
 number_of_server_nodes  = 3
