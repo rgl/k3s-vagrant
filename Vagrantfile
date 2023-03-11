@@ -28,7 +28,7 @@ k3s_version = 'v1.26.2+k3s1'
 # see https://github.com/kube-vip/kube-vip/releases
 kube_vip_version = 'v0.5.11'
 # see https://github.com/helm/helm/releases
-helm_version = 'v3.11.1'
+helm_version = 'v3.11.2'
 # see https://github.com/roboll/helmfile/releases
 helmfile_version = 'v0.144.0'
 # see https://github.com/kubernetes/dashboard/releases
