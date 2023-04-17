@@ -82,6 +82,10 @@ Vagrant.configure(2) do |config|
     lv.cpu_mode = 'host-passthrough'
     lv.nested = true
     lv.keymap = 'pt'
+    lv.disk_bus = 'scsi'
+    lv.disk_device = 'sda'
+    lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
+    lv.machine_virtual_size = 16
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
