@@ -43,7 +43,7 @@ etcdctl_version = 'v3.5.8'
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 metallb_chart_version = '4.3.0'
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
-gitlab_runner_chart_version = '0.50.1'
+gitlab_runner_chart_version = '0.51.1'
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 gitlab_fqdn = 'gitlab.example.com'
 gitlab_ip = '10.10.9.99'
