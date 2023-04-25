@@ -32,6 +32,13 @@ kubectl cluster-info
 kubectl get nodes -o wide
 ```
 
+List this repository dependencies (and which have newer versions):
+
+```bash
+export GITHUB_COM_TOKEN='YOUR_GITHUB_PERSONAL_TOKEN'
+./renovate.sh
+```
+
 ## Traefik Dashboard
 
 Access the Traefik Dashboard at:
