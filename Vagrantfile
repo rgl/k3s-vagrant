@@ -24,26 +24,46 @@ end
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
+# renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = 'v1.26.4+k3s1'
+
 # see https://github.com/kube-vip/kube-vip/releases
+# renovate: datasource=github-releases depName=kube-vip/kube-vip
 kube_vip_version = 'v0.5.12'
+
 # see https://github.com/helm/helm/releases
+# renovate: datasource=github-releases depName=helm/helm
 helm_version = 'v3.11.3'
+
 # see https://github.com/roboll/helmfile/releases
+# renovate: datasource=github-releases depName=roboll/helmfile
 helmfile_version = 'v0.144.0'
+
 # see https://github.com/kubernetes/dashboard/releases
+# renovate: datasource=github-releases depName=kubernetes/dashboard
 k8s_dashboard_version = 'v2.7.0'
+
 # see https://github.com/derailed/k9s/releases
+# renovate: datasource=github-releases depName=derailed/k9s
 k9s_version = 'v0.27.3'
+
 # see https://github.com/kubernetes-sigs/krew/releases
+# renovate: datasource=github-releases depName=kubernetes-sigs/krew
 krew_version = 'v0.4.3'
+
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
+# renovate: datasource=github-releases depName=etcd-io/etcd
 etcdctl_version = 'v3.5.8'
+
 # see https://artifacthub.io/packages/helm/bitnami/metallb
+# renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
 metallb_chart_version = '4.3.0'
+
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
+# renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
 gitlab_runner_chart_version = '0.51.1'
+
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 gitlab_fqdn = 'gitlab.example.com'
 gitlab_ip = '10.10.9.99'
