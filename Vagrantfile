@@ -24,7 +24,7 @@ end
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
-k3s_version = 'v1.26.3+k3s1'
+k3s_version = 'v1.26.4+k3s1'
 # see https://github.com/kube-vip/kube-vip/releases
 kube_vip_version = 'v0.5.12'
 # see https://github.com/helm/helm/releases
