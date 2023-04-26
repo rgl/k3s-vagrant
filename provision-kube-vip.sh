@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 kube_vip_version="${1:-v0.5.12}"; shift || true
-vip="${1:-10.11.0.100}"; shift || true
+vip="${1:-10.11.0.30}"; shift || true
 kube_vip_rbac_url="https://raw.githubusercontent.com/kube-vip/kube-vip/$kube_vip_version/docs/manifests/rbac.yaml"
 kube_vip_image="ghcr.io/kube-vip/kube-vip:$kube_vip_version"
 fqdn="$(hostname --fqdn)"

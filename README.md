@@ -4,10 +4,10 @@ This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wra
 
 # Usage
 
-Configure your hosts file with:
+Configure the host machine `hosts` file with:
 
 ```
-10.11.0.10 s.example.test
+10.11.0.30 s.example.test
 10.11.0.50 traefik.example.test
 10.11.0.50 kubernetes-dashboard.example.test
 ```
@@ -15,6 +15,43 @@ Configure your hosts file with:
 Install the base [Debian 11 (Bullseye) vagrant box](https://github.com/rgl/debian-vagrant).
 
 Optionally, start the [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant) environment at `../gitlab-vagrant`. If you do this, this environment will have the [gitlab-runner helm chart](https://docs.gitlab.com/runner/install/kubernetes.html) installed in the k8s cluster.
+
+Optionally, connect the environment to the physical network through the host `br-lan` bridge. The environment assumes that the host bridge was configured as:
+
+```bash
+sudo -i
+# review the configuration in the files at /etc/netplan and replace them all
+# with a single configuration file:
+ls -laF /etc/netplan
+cat >/etc/netplan/00-config.yaml <<'EOF'
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0: {}
+  bridges:
+    br-lan:
+      #link-local: []
+      dhcp4: false
+      addresses:
+        - 192.168.1.11/24
+      routes:
+        - to: default
+          via: 192.168.1.254
+      nameservers:
+        addresses:
+          - 192.168.1.254
+        search:
+          - lan
+      interfaces:
+        - eth0
+EOF
+netplan apply
+```
+
+And open the `Vagrantfile`, uncomment and edit the block that starts at
+`bridge_name` with your specific network details. Also ensure that the
+`hosts` file has the used IP addresses.
 
 Launch the environment:
 
