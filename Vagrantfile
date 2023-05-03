@@ -24,7 +24,7 @@ end
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
 k3s_channel = 'latest'
-# renovate: datasource=github-releases depName=k3s-io/k3s
+# renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=(?<version>1\.26\..+)
 k3s_version = 'v1.26.4+k3s1'
 
 # see https://github.com/kube-vip/kube-vip/releases
