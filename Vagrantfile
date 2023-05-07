@@ -2,7 +2,12 @@
 # have to force a --no-parallel execution.
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
+# enable typed triggers.
+# NB this is needed to modify the libvirt domain scsi controller model to virtio-scsi.
+ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
+
 require 'ipaddr'
+require 'open3'
 
 def get_or_generate_k3s_token
   # TODO generate an unique random an cache it.
@@ -115,6 +120,20 @@ Vagrant.configure(2) do |config|
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
     lv.machine_virtual_size = 16
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
+    config.trigger.before :'VagrantPlugins::ProviderLibvirt::Action::StartDomain', type: :action do |trigger|
+      trigger.ruby do |env, machine|
+        # modify the scsi controller model to virtio-scsi.
+        # see https://github.com/vagrant-libvirt/vagrant-libvirt/pull/692
+        # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/999
+        stdout, stderr, status = Open3.capture3(
+          'virt-xml', machine.id,
+          '--edit', 'type=scsi',
+          '--controller', 'model=virtio-scsi')
+        if status.exitstatus != 0
+          raise "failed to run virt-xml to modify the scsi controller model. status=#{status.exitstatus} stdout=#{stdout} stderr=#{stderr}"
+        end
+      end
+    end
   end
 
   config.vm.provider 'virtualbox' do |vb|
