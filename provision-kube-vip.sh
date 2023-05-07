@@ -9,6 +9,15 @@ fqdn="$(hostname --fqdn)"
 k3s_fqdn="s.$(hostname --domain)"
 k3s_url="https://$k3s_fqdn:6443"
 
+# load the IPVS kernel modules.
+cat >/etc/modules-load.d/ipvs.conf <<'EOF'
+ip_vs
+ip_vs_rr
+EOF
+for m in $(cat /etc/modules-load.d/ipvs.conf); do
+  modprobe $m
+done
+
 # install kube-vip.
 # NB this creates a HA VIP (L2 IPVS) for the k8s control-plane k3s/api-server.
 # see https://kube-vip.io/docs/usage/k3s/

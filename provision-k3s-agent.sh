@@ -37,8 +37,7 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
         sh -s -- \
             agent \
             --node-ip "$ip_address" \
-            --flannel-iface 'eth1' \
-            --kube-proxy-arg proxy-mode=ipvs
+            --flannel-iface 'eth1'
 
 # see the systemd unit.
 systemctl cat k3s-agent

@@ -164,6 +164,7 @@ Vagrant.configure(2) do |config|
       if bridge_name
         config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: ip_address, auto_config: false
         config.vm.provision 'shell', path: 'provision-network.sh', args: [ip_address]
+        config.vm.provision 'reload'
       else
         config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       end
@@ -203,6 +204,7 @@ Vagrant.configure(2) do |config|
       if bridge_name
         config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: ip_address, auto_config: false
         config.vm.provision 'shell', path: 'provision-network.sh', args: [ip_address]
+        config.vm.provision 'reload'
       else
         config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       end

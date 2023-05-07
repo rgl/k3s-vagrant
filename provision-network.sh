@@ -2,7 +2,6 @@
 set -euxo pipefail
 
 ip_address="$1"; shift || true
-gw_ip_address="$(ip route | awk '/default/ {print $3}')"
 
 # disable ipv6.
 cat >/etc/sysctl.d/99-ipv6.conf <<'EOF'
@@ -11,7 +10,9 @@ EOF
 sysctl -p -f /etc/sysctl.d/99-ipv6.conf
 
 # set network.
-ifdown eth1
+# NB the system must be rebooted for this to take effect. this is required when
+#    running by vagrant, since we cannot reconfigure the network under it.
+#    instead, we reboot the machine from a vagrant provisioner.
 cat >/etc/network/interfaces <<EOF
 source /etc/network/interfaces.d/*
 
@@ -25,7 +26,4 @@ auto eth1
 iface eth1 inet static
   address $ip_address
   netmask 255.255.255.0
-  post-up ip route add default via $gw_ip_address
-  post-down ip route del default via $gw_ip_address
 EOF
-ifup eth1

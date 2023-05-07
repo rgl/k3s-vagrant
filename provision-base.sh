@@ -78,6 +78,11 @@ set completion-ignore-case on
 "\eOC": forward-word
 EOF
 
+# install arp-scan.
+# arp-scan lets us discover nodes in the local network.
+# e.g. arp-scan --localnet --interface eth1
+apt-get install -y --no-install-recommends arp-scan
+
 # install useful tools.
 apt-get install -y --no-install-recommends \
     tcpdump \

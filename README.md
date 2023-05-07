@@ -23,7 +23,9 @@ sudo -i
 # review the configuration in the files at /etc/netplan and replace them all
 # with a single configuration file:
 ls -laF /etc/netplan
-cat >/etc/netplan/00-config.yaml <<'EOF'
+upstream_interface=eth0
+upstream_mac=$(ip link show $upstream_interface | perl -ne '/ether ([^ ]+)/ && print $1')
+cat >/etc/netplan/00-config.yaml <<EOF
 network:
   version: 2
   renderer: networkd
@@ -31,6 +33,11 @@ network:
     eth0: {}
   bridges:
     br-lan:
+      # inherit the MAC address from the enslaved eth0 interface.
+      # NB this is required in machines that have intel AMT with shared IP
+      #    address to prevent announcing multiple MAC addresses (AMT and OS
+      #    eth0) for the same IP address.
+      macaddress: $upstream_mac
       #link-local: []
       dhcp4: false
       addresses:
@@ -44,7 +51,7 @@ network:
         search:
           - lan
       interfaces:
-        - eth0
+        - $upstream_interface
 EOF
 netplan apply
 ```
