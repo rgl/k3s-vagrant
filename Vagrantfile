@@ -119,9 +119,20 @@ Vagrant.configure(2) do |config|
     lv.disk_device = 'sda'
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
     lv.machine_virtual_size = 16
+    # NB vagrant-libvirt does not yet support urandom. but we'll modify this to
+    #    urandom in the trigger bellow.
+    lv.random :model => 'random'
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
     config.trigger.before :'VagrantPlugins::ProviderLibvirt::Action::StartDomain', type: :action do |trigger|
       trigger.ruby do |env, machine|
+        # modify the random model to use the urandom backend device.
+        stdout, stderr, status = Open3.capture3(
+          'virt-xml', machine.id,
+          '--edit',
+          '--rng', '/dev/urandom')
+        if status.exitstatus != 0
+          raise "failed to run virt-xml to modify the random backend device. status=#{status.exitstatus} stdout=#{stdout} stderr=#{stderr}"
+        end
         # modify the scsi controller model to virtio-scsi.
         # see https://github.com/vagrant-libvirt/vagrant-libvirt/pull/692
         # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/999
