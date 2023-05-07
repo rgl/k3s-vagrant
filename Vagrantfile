@@ -25,6 +25,10 @@ def generate_nodes(first_ip_address, count, name_prefix)
   end
 end
 
+# see https://github.com/project-zot/zot/releases
+# renovate: datasource=github-releases depName=project-zot/zot
+zot_version = '2.0.0-rc4'
+
 # see https://get.k3s.io/
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
@@ -85,6 +89,8 @@ number_of_server_nodes  = 3
 number_of_agent_nodes   = 2
 
 bridge_name           = nil
+registry_fqdn         = 'registry.example.test'
+registry_ip           = '10.11.0.4'
 server_fqdn           = 's.example.test'
 server_vip            = '10.11.0.30'
 first_server_node_ip  = '10.11.0.31'
@@ -93,6 +99,7 @@ lb_ip_range           = '10.11.0.50-10.11.0.69'
 
 # connect to the physical network through the host br-lan bridge.
 # bridge_name           = 'br-lan'
+# registry_ip           = '192.168.1.4'
 # server_vip            = '192.168.1.30'
 # first_server_node_ip  = '192.168.1.31'
 # first_agent_node_ip   = '192.168.1.41'
@@ -103,6 +110,7 @@ agent_nodes   = generate_nodes(first_agent_node_ip, number_of_agent_nodes, 'a')
 k3s_token     = get_or_generate_k3s_token
 
 extra_hosts = """
+#{registry_ip} #{registry_fqdn}
 #{server_vip} #{server_fqdn}
 #{gitlab_ip} #{gitlab_fqdn}
 """
@@ -152,6 +160,25 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
   end
 
+  config.vm.define 'registry' do |config|
+    config.vm.provider 'libvirt' do |lv, config|
+      lv.memory = 2*1024
+    end
+    config.vm.provider 'virtualbox' do |vb|
+      vb.memory = 2*1024
+    end
+    config.vm.hostname = registry_fqdn
+    if bridge_name
+      config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: registry_ip, auto_config: false
+      config.vm.provision 'shell', path: 'provision-network.sh', args: [registry_ip]
+      config.vm.provision 'reload'
+    else
+      config.vm.network :private_network, ip: registry_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
+    end
+    config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
+    config.vm.provision 'shell', path: 'provision-zot.sh', args: [zot_version]
+  end
+
   server_nodes.each do |name, fqdn, ip_address, n|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
@@ -171,6 +198,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
+      config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         n == 1 ? "cluster-init" : "cluster-join",
         k3s_channel,
@@ -210,6 +238,7 @@ Vagrant.configure(2) do |config|
       end
       config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
+      config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,
         k3s_version,

@@ -7,7 +7,8 @@ This is a [k3s](https://github.com/k3s-io/k3s) kubernetes cluster playground wra
 Configure the host machine `hosts` file with:
 
 ```
-10.11.0.30 s.example.test
+10.11.0.4  registry.example.test
+10.11.0.10 s.example.test
 10.11.0.50 traefik.example.test
 10.11.0.50 kubernetes-dashboard.example.test
 ```
