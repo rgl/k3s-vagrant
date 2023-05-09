@@ -8,6 +8,7 @@ k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
 krew_version="${1:-v0.4.3}"; shift || true # NB see https://github.com/kubernetes-sigs/krew
+taint="${1:-1}"; shift || true
 fqdn="$(hostname --fqdn)"
 k3s_fqdn="s.$(hostname --domain)"
 k3s_url="https://$k3s_fqdn:6443"
@@ -39,6 +40,11 @@ else
   k3s_extra_args="$k3s_extra_args --server $k3s_url"
 fi
 
+# taint.
+if [ "$taint" == '1' ]; then
+  k3s_extra_args="$k3s_extra_args --node-taint CriticalAddonsOnly=true:NoExecute"
+fi
+
 # install k3s.
 # see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.26.4+k3s1/pkg/cli/cmds/server.go#L549-L557
 # or run k3s server --help
@@ -51,7 +57,6 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
         K3S_TOKEN="$k3s_token" \
         sh -s -- \
             server \
-            --node-taint CriticalAddonsOnly=true:NoExecute \
             --node-ip "$ip_address" \
             --cluster-cidr '10.12.0.0/16' \
             --service-cidr '10.13.0.0/16' \

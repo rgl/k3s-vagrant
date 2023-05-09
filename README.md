@@ -67,7 +67,7 @@ Launch the environment:
 time vagrant up --no-destroy-on-error --no-tty --provider=libvirt # or --provider=virtualbox
 ```
 
-**NB** The server nodes (e.g. `s1`) are [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to prevent them from executing non control-plane workloads. That kind of workload is executed in the agent nodes (e.g. `a1`).
+**NB** When the `number_of_agent_nodes` `Vagrantfile` variable value is above `0`, the server nodes (e.g. `s1`) are [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to prevent them from executing non control-plane workloads. That kind of workload is executed in the agent nodes (e.g. `a1`).
 
 Access the cluster from the host:
 

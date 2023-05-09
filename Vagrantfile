@@ -206,7 +206,8 @@ Vagrant.configure(2) do |config|
         k3s_token,
         flannel_backend,
         ip_address,
-        krew_version
+        krew_version,
+        number_of_agent_nodes > 0 && '1' || '0',
       ]
       config.vm.provision 'shell', path: 'provision-helm.sh', args: [helm_version] # NB this might not really be needed, as rancher has a HelmChart CRD.
       config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [helmfile_version]
