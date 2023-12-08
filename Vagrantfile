@@ -155,17 +155,9 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  config.vm.provider 'virtualbox' do |vb|
-    vb.linked_clone = true
-    vb.cpus = 2
-  end
-
   config.vm.define 'registry' do |config|
     config.vm.provider 'libvirt' do |lv, config|
       lv.memory = 2*1024
-    end
-    config.vm.provider 'virtualbox' do |vb|
-      vb.memory = 2*1024
     end
     config.vm.hostname = registry_fqdn
     if bridge_name
@@ -183,9 +175,6 @@ Vagrant.configure(2) do |config|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
-      end
-      config.vm.provider 'virtualbox' do |vb|
-        vb.memory = 2*1024
       end
       config.vm.hostname = fqdn
       if bridge_name
@@ -225,9 +214,6 @@ Vagrant.configure(2) do |config|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
-      end
-      config.vm.provider 'virtualbox' do |vb|
-        vb.memory = 2*1024
       end
       config.vm.hostname = fqdn
       if bridge_name
