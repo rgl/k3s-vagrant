@@ -253,7 +253,7 @@ Vagrant.configure(2) do |config|
     trigger.only_on = 's1'
     trigger.run = {
       inline: '''bash -euc \'
-mkdir -p tmp
+install -d tmp
 artifacts=(
   ../gitlab-vagrant/tmp/gitlab.example.com-crt.pem
   ../gitlab-vagrant/tmp/gitlab.example.com-crt.der
@@ -261,7 +261,7 @@ artifacts=(
 )
 for artifact in "${artifacts[@]}"; do
   if [ -f $artifact ]; then
-    cp $artifact tmp
+    rsync $artifact tmp
   fi
 done
 \'
