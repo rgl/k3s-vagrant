@@ -38,7 +38,7 @@ k3s_version = 'v1.26.4+k3s1'
 
 # see https://github.com/kube-vip/kube-vip/releases
 # renovate: datasource=github-releases depName=kube-vip/kube-vip
-kube_vip_version = 'v0.5.12'
+kube_vip_version = 'v0.6.4'
 
 # see https://github.com/helm/helm/releases
 # renovate: datasource=github-releases depName=helm/helm
