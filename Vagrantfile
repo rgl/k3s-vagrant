@@ -58,7 +58,7 @@ k9s_version = 'v0.29.1'
 
 # see https://github.com/kubernetes-sigs/krew/releases
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
-krew_version = 'v0.4.3'
+krew_version = 'v0.4.4'
 
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
