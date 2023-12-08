@@ -42,7 +42,7 @@ kube_vip_version = 'v0.5.12'
 
 # see https://github.com/helm/helm/releases
 # renovate: datasource=github-releases depName=helm/helm
-helm_version = 'v3.11.3'
+helm_version = 'v3.13.2'
 
 # see https://github.com/roboll/helmfile/releases
 # renovate: datasource=github-releases depName=roboll/helmfile
