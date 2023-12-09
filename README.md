@@ -13,7 +13,7 @@ Configure the host machine `hosts` file with:
 10.11.0.50 kubernetes-dashboard.example.test
 ```
 
-Install the base [Debian 11 (Bullseye) vagrant box](https://github.com/rgl/debian-vagrant).
+Install the base [Debian 12 (Bookworm) vagrant box](https://github.com/rgl/debian-vagrant).
 
 Optionally, start the [rgl/gitlab-vagrant](https://github.com/rgl/gitlab-vagrant) environment at `../gitlab-vagrant`. If you do this, this environment will have the [gitlab-runner helm chart](https://docs.gitlab.com/runner/install/kubernetes.html) installed in the k8s cluster.
 

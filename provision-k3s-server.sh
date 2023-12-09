@@ -72,9 +72,7 @@ curl -sfL https://raw.githubusercontent.com/k3s-io/k3s/$k3s_version/install.sh \
 systemctl cat k3s
 
 # check whether this system has the k3s requirements.
-# NB we ignore the result for now, because its bogus on debian 11.
-#    see https://github.com/k3s-io/k3s/issues/3897
-k3s check-config || true
+k3s check-config
 
 # wait for this node to be Ready.
 # e.g. s1     Ready    control-plane,master   3m    v1.26.11+k3s2
@@ -220,7 +218,7 @@ python3 - <<EOF
 import base64
 import yaml
 
-d = yaml.load(open('/etc/rancher/k3s/k3s.yaml', 'r'))
+d = yaml.load(open('/etc/rancher/k3s/k3s.yaml', 'r'), Loader=yaml.FullLoader)
 
 # save cluster ca certificate.
 for c in d['clusters']:

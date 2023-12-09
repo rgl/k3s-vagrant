@@ -116,7 +116,7 @@ extra_hosts = """
 """
 
 Vagrant.configure(2) do |config|
-  config.vm.box = 'debian-11-amd64'
+  config.vm.box = 'debian-12-amd64'
 
   config.vm.provider 'libvirt' do |lv, config|
     lv.cpus = 2
