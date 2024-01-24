@@ -54,7 +54,7 @@ k8s_dashboard_version = 'v2.7.0'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
-k9s_version = 'v0.29.1'
+k9s_version = 'v0.31.7'
 
 # see https://github.com/kubernetes-sigs/krew/releases
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
