@@ -13,7 +13,7 @@ gitea_container_name="$(basename "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
 
 # see https://hub.docker.com/r/gitea/gitea/tags
 # renovate: datasource=docker depName=gitea/gitea
-gitea_version='1.21.1'
+gitea_version='1.21.4'
 
 # see https://hub.docker.com/r/renovate/renovate/tags
 # renovate: datasource=docker depName=renovate/renovate extractVersion=(?<version>.+)-slim$
@@ -29,7 +29,7 @@ install -d tmp
 # start gitea in background.
 # see https://docs.gitea.io/en-us/config-cheat-sheet/
 # see https://github.com/go-gitea/gitea/releases
-# see https://github.com/go-gitea/gitea/blob/v1.21.1/docker/root/etc/s6/gitea/setup
+# see https://github.com/go-gitea/gitea/blob/v1.21.4/docker/root/etc/s6/gitea/setup
 echo 'Starting Gitea...'
 docker run \
     --detach \
@@ -73,8 +73,6 @@ curl \
 # see https://docs.gitea.io/en-us/api-usage/
 # see https://docs.gitea.io/en-us/oauth2-provider/#scopes
 # see https://try.gitea.io/api/swagger#/user/userCreateToken
-# TODO possibly drop read:misc depending on the outcome of:
-#       https://github.com/go-gitea/gitea/issues/26035
 echo "Creating Gitea $RENOVATE_USERNAME user personal access token..."
 curl \
     --silent \
@@ -83,7 +81,7 @@ curl \
     -u "$RENOVATE_USERNAME:$RENOVATE_PASSWORD" \
     -X POST \
     -H "Content-Type: application/json" \
-    -d '{"name": "renovate", "scopes": ["read:misc", "read:user", "write:issue", "write:repository"]}' \
+    -d '{"name": "renovate", "scopes": ["read:user", "write:issue", "write:repository"]}' \
     "$gitea_url/api/v1/users/$RENOVATE_USERNAME/tokens" \
     | jq -r .sha1 \
     >tmp/renovate-gitea-token.txt
