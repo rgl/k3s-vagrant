@@ -151,6 +151,13 @@ sudo su -l
 k9s
 ```
 
+## Zot Registry
+
+The [Zot Registry](https://zotregistry.dev) is installed in the registry
+node and can be accessed at:
+
+http://registry.example.test:5001
+
 # Notes
 
 * k3s has a custom k8s authenticator module that does user authentication from `/var/lib/rancher/k3s/server/cred/passwd`.
