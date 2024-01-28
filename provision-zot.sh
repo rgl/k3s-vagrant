@@ -124,6 +124,12 @@ systemctl daemon-reload
 systemctl enable zot
 systemctl restart zot
 
+# wait for zot the be ready.
+systemctl is-active --quiet --wait zot
+# TODO remove this while loop after the following issue is fixed:
+#         https://github.com/project-zot/zot/issues/2188
+while ! wget -q "$zot_url/v2/"; do sleep 1; done;
+
 # configure zli.
 zli completion bash >/usr/share/bash-completion/completions/zli
 zli config add main "$zot_url"
