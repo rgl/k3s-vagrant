@@ -4,7 +4,7 @@ set -euxo pipefail
 zot_version="${1:-2.0.1}"
 
 zot_domain="$(hostname --fqdn)"
-zot_host="$zot_domain:5001"
+zot_url="http://$zot_domain:5001"
 
 # NB you can see all the currently used container images with:
 #     kubectl get pods --all-namespaces -o go-template --template '{{range .items}}{{range .spec.containers}}{{printf "%s\n" .image}}{{end}}{{end}}' | sort -u
@@ -29,15 +29,22 @@ adduser \
 install -m 750 -o zot -g zot -d /opt/zot
 
 # download and install.
-zot_url="https://github.com/project-zot/zot/releases/download/v$zot_version/zot-linux-amd64"
-zot_dist_path="/vagrant/tmp/zot-$zot_version-$(basename "$zot_url")"
+zot_dist_url="https://github.com/project-zot/zot/releases/download/v$zot_version/zot-linux-amd64"
+zli_dist_url="https://github.com/project-zot/zot/releases/download/v$zot_version/zli-linux-amd64"
+zot_dist_path="/vagrant/tmp/zot-$zot_version-$(basename "$zot_dist_url")"
+zli_dist_path="/vagrant/tmp/zot-$zot_version-$(basename "$zli_dist_url")"
 if [ ! -f "$zot_dist_path" ]; then
-    wget -qO "$zot_dist_path" "$zot_url"
+    wget -qO "$zot_dist_path" "$zot_dist_url"
+fi
+if [ ! -f "$zli_dist_path" ]; then
+    wget -qO "$zli_dist_path" "$zli_dist_url"
 fi
 install -m 755 -d /opt/zot/bin
 install -m 750 -g zot -d /opt/zot/conf
 install -m 750 -o zot -g zot -d /opt/zot/data
 install -m 755 "$zot_dist_path" /opt/zot/bin/zot
+install -m 755 "$zli_dist_path" /opt/zot/bin/zli
+ln -sf /opt/zot/bin/zli /usr/local/bin/zli
 
 # # install the certificates.
 # install -m 440 -g zot /vagrant/tmp/tls/example-ca/$zot_domain-crt.pem /opt/zot/conf/crt.pem
@@ -115,3 +122,9 @@ EOF
 systemctl daemon-reload
 systemctl enable zot
 systemctl restart zot
+
+# configure zli.
+zli completion bash >/usr/share/bash-completion/completions/zli
+zli config add main "$zot_url"
+zli config --list
+zli image list --config main
