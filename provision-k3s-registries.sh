@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-registry_mirror_url="http://registry.$(hostname --domain):5001"
+registry_mirror_url="http://registry.$(hostname --domain)"
 registries='
 docker.io
 registry.k8s.io

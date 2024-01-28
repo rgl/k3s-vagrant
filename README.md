@@ -156,7 +156,7 @@ k9s
 The [Zot Registry](https://zotregistry.dev) is installed in the registry
 node and can be accessed at:
 
-http://registry.example.test:5001
+http://registry.example.test
 
 # Notes
 

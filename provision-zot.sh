@@ -4,7 +4,7 @@ set -euxo pipefail
 zot_version="${1:-2.0.1}"
 
 zot_domain="$(hostname --fqdn)"
-zot_url="http://$zot_domain:5001"
+zot_url="http://$zot_domain"
 
 # NB you can see all the currently used container images with:
 #     kubectl get pods --all-namespaces -o go-template --template '{{range .items}}{{range .spec.containers}}{{printf "%s\n" .image}}{{end}}{{end}}' | sort -u
@@ -56,9 +56,9 @@ ln -sf /opt/zot/bin/zli /usr/local/bin/zli
 #       regctl tag ls registry.k8s.io/pause
 #       regctl image inspect registry.k8s.io/pause
 #       # use the zot mirror registry.
-#       regctl image export registry.test:5001/mirror/registry.k8s.io/pause pause.tar
-#       regctl image inspect registry.test:5001/mirror/registry.k8s.io/pause
-#       regctl tag ls registry.test:5001/mirror/registry.k8s.io/pause
+#       regctl image export registry.test/mirror/registry.k8s.io/pause pause.tar
+#       regctl image inspect registry.test/mirror/registry.k8s.io/pause
+#       regctl tag ls registry.test/mirror/registry.k8s.io/pause
 # see https://zotregistry.dev/v2.0.1/articles/mirroring/
 # see https://zotregistry.dev/v2.0.1/admin-guide/admin-configuration/#syncing-and-mirroring-registries
 cat >/opt/zot/conf/config.yaml <<EOF
@@ -66,7 +66,7 @@ storage:
   rootDirectory: /opt/zot/data
 http:
   address: 0.0.0.0
-  port: 5001
+  port: 80
   # realm: zot
   # tls:
   #   cert: /opt/zot/conf/crt.pem
@@ -115,6 +115,7 @@ Restart=on-failure
 User=zot
 Group=zot
 LimitNOFILE=500000
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
