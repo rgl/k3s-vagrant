@@ -77,6 +77,23 @@ kubectl cluster-info
 kubectl get nodes -o wide
 ```
 
+Execute an example workload:
+
+```bash
+export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl apply -f example.yml
+kubectl rollout status deployment/example
+kubectl get ingresses,services,pods,deployments
+example_ip="$(kubectl get ingress/example -o json | jq -r .status.loadBalancer.ingress[0].ip)"
+example_fqdn="$(kubectl get ingress/example -o json | jq -r .spec.rules[0].host)"
+example_url="http://$example_fqdn"
+curl --resolve "$example_fqdn:80:$example_ip" "$example_url"
+echo "$example_ip $example_fqdn" | sudo tee -a /etc/hosts
+curl "$example_url"
+xdg-open "$example_url"
+kubectl delete -f example.yml
+```
+
 List this repository dependencies (and which have newer versions):
 
 ```bash
