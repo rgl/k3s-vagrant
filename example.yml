@@ -56,6 +56,7 @@ spec:
       enableServiceLinks: false
       containers:
         # see https://github.com/rgl/example-docker-buildx-go
+        # see https://hub.docker.com/repository/docker/ruilopes/example-docker-buildx-go
         - name: example
           image: ruilopes/example-docker-buildx-go:v1.10.0
           args:

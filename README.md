@@ -77,7 +77,7 @@ kubectl cluster-info
 kubectl get nodes -o wide
 ```
 
-Execute an example workload:
+Execute an [example workload](https://github.com/rgl/example-docker-buildx-go):
 
 ```bash
 export KUBECONFIG=$PWD/tmp/admin.conf
