@@ -94,6 +94,25 @@ xdg-open "$example_url"
 kubectl delete -f example.yml
 ```
 
+Execute an [example WebAssembly (Wasm) workload](https://github.com/rgl/spin-http-go-example):
+
+```bash
+export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl apply -f example-spin.yml
+kubectl rollout status deployment/example-spin
+kubectl get ingresses,services,pods,deployments
+example_spin_ip="$(kubectl get ingress/example-spin -o json | jq -r .status.loadBalancer.ingress[0].ip)"
+example_spin_fqdn="$(kubectl get ingress/example-spin -o json | jq -r .spec.rules[0].host)"
+example_spin_url="http://$example_spin_fqdn"
+curl --resolve "$example_spin_fqdn:80:$example_spin_ip" "$example_spin_url"
+echo "$example_spin_ip $example_spin_fqdn" | sudo tee -a /etc/hosts
+curl "$example_spin_url"
+xdg-open "$example_spin_url"
+# NB unfortunately, the pod will be stuck in the Terminating state.
+#    TODO https://github.com/deislabs/containerd-wasm-shims/issues/207
+kubectl delete -f example-spin.yml
+```
+
 List this repository dependencies (and which have newer versions):
 
 ```bash

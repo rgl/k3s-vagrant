@@ -1,0 +1,84 @@
+---
+# see https://kubernetes.io/docs/concepts/services-networking/ingress/
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#ingress-v1-networking-k8s-io
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-spin
+spec:
+  rules:
+    - host: example-spin.example.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-spin
+                port:
+                  name: web
+---
+# see https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#service-v1-core
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#serviceport-v1-core
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-spin
+spec:
+  type: ClusterIP
+  selector:
+    app: example-spin
+  ports:
+    - name: web
+      port: 80
+      protocol: TCP
+      targetPort: web
+---
+# see https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#deployment-v1-apps
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#podtemplatespec-v1-core
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#container-v1-core
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-spin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-spin
+  template:
+    metadata:
+      labels:
+        app: example-spin
+    spec:
+      runtimeClassName: spin
+      enableServiceLinks: false
+      containers:
+        - name: example
+          # see https://github.com/rgl/spin-http-go-example
+          # see https://github.com/rgl/spin-http-go-example/pkgs/container/spin-http-go-example
+          image: ghcr.io/rgl/spin-http-go-example:0.1.0
+          command: ["/"]
+          ports:
+            - name: web
+              containerPort: 80
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: '0.1'
+            limits:
+              memory: 32Mi
+              cpu: '0.1'
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 65534 # 65534 is the uid of the nobody user.
+            runAsGroup: 65534 # 65534 is the gid of the nogroup group.
+            seccompProfile:
+              type: RuntimeDefault

@@ -187,6 +187,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
+      config.vm.provision 'shell', path: 'provision-containerd-shim-spin-v2.sh'
       config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         n == 1 ? "cluster-init" : "cluster-join",
@@ -225,6 +226,7 @@ Vagrant.configure(2) do |config|
       end
       config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
+      config.vm.provision 'shell', path: 'provision-containerd-shim-spin-v2.sh'
       config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
         k3s_channel,
