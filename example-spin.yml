@@ -59,7 +59,7 @@ spec:
         - name: example
           # see https://github.com/rgl/spin-http-go-example
           # see https://github.com/rgl/spin-http-go-example/pkgs/container/spin-http-go-example
-          image: ghcr.io/rgl/spin-http-go-example:0.1.0
+          image: ghcr.io/rgl/spin-http-go-example:0.2.0
           command: ["/"]
           ports:
             - name: web
