@@ -58,7 +58,7 @@ spec:
         # see https://github.com/rgl/example-docker-buildx-go
         # see https://hub.docker.com/repository/docker/ruilopes/example-docker-buildx-go
         - name: example
-          image: ruilopes/example-docker-buildx-go:v1.10.0
+          image: ruilopes/example-docker-buildx-go:v1.11.0
           args:
             - -listen=0.0.0.0:9000
           env:

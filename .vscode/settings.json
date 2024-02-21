@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "buildx",
         "Distro",
         "ethernets",
         "httpie",
@@ -7,6 +8,7 @@
         "macaddress",
         "netplan",
         "networkd",
+        "ruilopes",
         "traefik"
     ]
 }
