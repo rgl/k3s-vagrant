@@ -27,92 +27,92 @@ end
 
 # see https://github.com/project-zot/zot/releases
 # renovate: datasource=github-releases depName=project-zot/zot
-zot_version = '2.0.1'
+ZOT_VERSION = '2.0.1'
 
 # see https://get.k3s.io/
 # see https://update.k3s.io/v1-release/channels
 # see https://github.com/k3s-io/k3s/releases
-k3s_channel = 'latest'
+K3S_CHANNEL = 'latest'
 # renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=(?<version>1\.28\..+)
-k3s_version = 'v1.28.6+k3s2'
+K3S_VERSION = 'v1.28.6+k3s2'
 
 # see https://github.com/kube-vip/kube-vip/releases
 # renovate: datasource=github-releases depName=kube-vip/kube-vip
-kube_vip_version = 'v0.6.4'
+KUBE_VIP_VERSION = 'v0.6.4'
 
 # see https://github.com/helm/helm/releases
 # renovate: datasource=github-releases depName=helm/helm
-helm_version = 'v3.14.2'
+HELM_VERSION = 'v3.14.2'
 
 # see https://github.com/roboll/helmfile/releases
 # renovate: datasource=github-releases depName=roboll/helmfile
-helmfile_version = 'v0.144.0'
+HELMFILE_VERSION = 'v0.144.0'
 
 # see https://github.com/kubernetes/dashboard/releases
 # renovate: datasource=github-releases depName=kubernetes/dashboard
-k8s_dashboard_version = 'v2.7.0'
+K8S_DASHBOARD_VERSION = 'v2.7.0'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
-k9s_version = 'v0.31.9'
+K9S_VERSION = 'v0.31.9'
 
 # see https://github.com/kubernetes-sigs/krew/releases
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
-krew_version = 'v0.4.4'
+KREW_VERSION = 'v0.4.4'
 
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
 # renovate: datasource=github-releases depName=etcd-io/etcd
-etcdctl_version = 'v3.5.12'
+ETCDCTL_VERSION = 'v3.5.12'
 
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
-metallb_chart_version = '4.14.2'
+METALLB_CHART_VERSION = '4.14.2'
 
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
-gitlab_runner_chart_version = '0.61.1'
+GITLAB_RUNNER_CHART_VERSION = '0.61.1'
 
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
-gitlab_fqdn = 'gitlab.example.com'
-gitlab_ip = '10.10.9.99'
+GITLAB_FQDN = 'gitlab.example.com'
+GITLAB_IP = '10.10.9.99'
 
 # set the flannel backend. use one of:
 # * host-gw:          non-secure network (needs ethernet (L2) connectivity between nodes).
 # * vxlan:            non-secure network (needs UDP (L3) connectivity between nodes).
 # * wireguard-native: secure network (needs UDP (L3) connectivity between nodes).
-flannel_backend = 'host-gw'
-#flannel_backend = 'vxlan'
-#flannel_backend = 'wireguard-native'
+FLANNEL_BACKEND = 'host-gw'
+#FLANNEL_BACKEND = 'vxlan'
+#FLANNEL_BACKEND = 'wireguard-native'
 
-number_of_server_nodes  = 3
-number_of_agent_nodes   = 2
+NUMBER_OF_SERVER_NODES  = 3
+NUMBER_OF_AGENT_NODES   = 2
 
-bridge_name           = nil
-registry_fqdn         = 'registry.example.test'
-registry_ip           = '10.11.0.4'
-server_fqdn           = 's.example.test'
-server_vip            = '10.11.0.30'
-first_server_node_ip  = '10.11.0.31'
-first_agent_node_ip   = '10.11.0.41'
-lb_ip_range           = '10.11.0.50-10.11.0.69'
+BRIDGE_NAME           = nil
+REGISTRY_FQDN         = 'registry.example.test'
+REGISTRY_IP           = '10.11.0.4'
+SERVER_FQDN           = 's.example.test'
+SERVER_VIP            = '10.11.0.30'
+FIRST_SERVER_NODE_IP  = '10.11.0.31'
+FIRST_AGENT_NODE_IP   = '10.11.0.41'
+LB_IP_RANGE           = '10.11.0.50-10.11.0.69'
 
 # connect to the physical network through the host br-lan bridge.
-# bridge_name           = 'br-lan'
-# registry_ip           = '192.168.1.4'
-# server_vip            = '192.168.1.30'
-# first_server_node_ip  = '192.168.1.31'
-# first_agent_node_ip   = '192.168.1.41'
-# lb_ip_range           = '192.168.1.50-192.168.1.69'
+# BRIDGE_NAME           = 'br-lan'
+# REGISTRY_IP           = '192.168.1.4'
+# SERVER_VIP            = '192.168.1.30'
+# FIRST_SERVER_NODE_IP  = '192.168.1.31'
+# FIRST_AGENT_NODE_IP   = '192.168.1.41'
+# LB_IP_RANGE           = '192.168.1.50-192.168.1.69'
 
-server_nodes  = generate_nodes(first_server_node_ip, number_of_server_nodes, 's')
-agent_nodes   = generate_nodes(first_agent_node_ip, number_of_agent_nodes, 'a')
-k3s_token     = get_or_generate_k3s_token
+SERVER_NODES  = generate_nodes(FIRST_SERVER_NODE_IP, NUMBER_OF_SERVER_NODES, 's')
+AGENT_NODES   = generate_nodes(FIRST_AGENT_NODE_IP, NUMBER_OF_AGENT_NODES, 'a')
+K3S_TOKEN     = get_or_generate_k3s_token
 
-extra_hosts = """
-#{registry_ip} #{registry_fqdn}
-#{server_vip} #{server_fqdn}
-#{gitlab_ip} #{gitlab_fqdn}
+EXTRA_HOSTS = """
+#{REGISTRY_IP} #{REGISTRY_FQDN}
+#{SERVER_VIP} #{SERVER_FQDN}
+#{GITLAB_IP} #{GITLAB_FQDN}
 """
 
 Vagrant.configure(2) do |config|
@@ -159,81 +159,81 @@ Vagrant.configure(2) do |config|
     config.vm.provider 'libvirt' do |lv, config|
       lv.memory = 2*1024
     end
-    config.vm.hostname = registry_fqdn
-    if bridge_name
-      config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: registry_ip, auto_config: false
-      config.vm.provision 'shell', path: 'provision-network.sh', args: [registry_ip]
+    config.vm.hostname = REGISTRY_FQDN
+    if BRIDGE_NAME
+      config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: BRIDGE_NAME, ip: REGISTRY_IP, auto_config: false
+      config.vm.provision 'shell', path: 'provision-network.sh', args: [REGISTRY_IP]
       config.vm.provision 'reload'
     else
-      config.vm.network :private_network, ip: registry_ip, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
+      config.vm.network :private_network, ip: REGISTRY_IP, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
     end
-    config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
-    config.vm.provision 'shell', path: 'provision-zot.sh', args: [zot_version]
+    config.vm.provision 'shell', path: 'provision-base.sh', args: [EXTRA_HOSTS]
+    config.vm.provision 'shell', path: 'provision-zot.sh', args: [ZOT_VERSION]
   end
 
-  server_nodes.each do |name, fqdn, ip_address, n|
+  SERVER_NODES.each do |name, fqdn, ip_address, n|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
       end
       config.vm.hostname = fqdn
-      if bridge_name
-        config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: ip_address, auto_config: false
+      if BRIDGE_NAME
+        config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: BRIDGE_NAME, ip: ip_address, auto_config: false
         config.vm.provision 'shell', path: 'provision-network.sh', args: [ip_address]
         config.vm.provision 'reload'
       else
         config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       end
-      config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
+      config.vm.provision 'shell', path: 'provision-base.sh', args: [EXTRA_HOSTS]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
-      config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [etcdctl_version]
+      config.vm.provision 'shell', path: 'provision-etcdctl.sh', args: [ETCDCTL_VERSION]
       config.vm.provision 'shell', path: 'provision-containerd-shim-spin-v2.sh'
       config.vm.provision 'shell', path: 'provision-containerd-configuration.sh'
       config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-server.sh', args: [
         n == 1 ? "cluster-init" : "cluster-join",
-        k3s_channel,
-        k3s_version,
-        k3s_token,
-        flannel_backend,
+        K3S_CHANNEL,
+        K3S_VERSION,
+        K3S_TOKEN,
+        FLANNEL_BACKEND,
         ip_address,
-        krew_version,
-        number_of_agent_nodes > 0 && '1' || '0',
+        KREW_VERSION,
+        NUMBER_OF_AGENT_NODES > 0 && '1' || '0',
       ]
-      config.vm.provision 'shell', path: 'provision-helm.sh', args: [helm_version] # NB this might not really be needed, as rancher has a HelmChart CRD.
-      config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [helmfile_version]
-      config.vm.provision 'shell', path: 'provision-k9s.sh', args: [k9s_version]
+      config.vm.provision 'shell', path: 'provision-helm.sh', args: [HELM_VERSION] # NB this might not really be needed, as rancher has a HelmChart CRD.
+      config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [HELMFILE_VERSION]
+      config.vm.provision 'shell', path: 'provision-k9s.sh', args: [K9S_VERSION]
       if n == 1
-        config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [kube_vip_version, server_vip]
-        config.vm.provision 'shell', path: 'provision-metallb.sh', args: [metallb_chart_version, lb_ip_range]
-        config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [k8s_dashboard_version]
-        config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [gitlab_runner_chart_version, gitlab_fqdn, gitlab_ip]
+        config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [KUBE_VIP_VERSION, SERVER_VIP]
+        config.vm.provision 'shell', path: 'provision-metallb.sh', args: [METALLB_CHART_VERSION, LB_IP_RANGE]
+        config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_VERSION]
+        config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP]
       end
     end
   end
 
-  agent_nodes.each do |name, fqdn, ip_address, n|
+  AGENT_NODES.each do |name, fqdn, ip_address, n|
     config.vm.define name do |config|
       config.vm.provider 'libvirt' do |lv, config|
         lv.memory = 2*1024
       end
       config.vm.hostname = fqdn
-      if bridge_name
-        config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: bridge_name, ip: ip_address, auto_config: false
+      if BRIDGE_NAME
+        config.vm.network :public_network, mode: 'bridge', type: 'bridge', dev: BRIDGE_NAME, ip: ip_address, auto_config: false
         config.vm.provision 'shell', path: 'provision-network.sh', args: [ip_address]
         config.vm.provision 'reload'
       else
         config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false
       end
-      config.vm.provision 'shell', path: 'provision-base.sh', args: [extra_hosts]
+      config.vm.provision 'shell', path: 'provision-base.sh', args: [EXTRA_HOSTS]
       config.vm.provision 'shell', path: 'provision-wireguard.sh'
       config.vm.provision 'shell', path: 'provision-containerd-shim-spin-v2.sh'
       config.vm.provision 'shell', path: 'provision-containerd-configuration.sh'
       config.vm.provision 'shell', path: 'provision-k3s-registries.sh'
       config.vm.provision 'shell', path: 'provision-k3s-agent.sh', args: [
-        k3s_channel,
-        k3s_version,
-        k3s_token,
+        K3S_CHANNEL,
+        K3S_VERSION,
+        K3S_TOKEN,
         ip_address
       ]
     end
