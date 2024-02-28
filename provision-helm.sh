@@ -6,6 +6,9 @@ set -euo pipefail
 
 helm_version="${1:-v3.14.2}"; shift || true
 
+# install dependencies.
+apt-get install -y --no-install-recommends git-core
+
 # install helm.
 # see https://helm.sh/docs/intro/install/
 echo "installing helm $helm_version client..."
