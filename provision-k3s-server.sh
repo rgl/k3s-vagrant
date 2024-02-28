@@ -3,7 +3,7 @@ set -euxo pipefail
 
 k3s_command="$1"; shift
 k3s_channel="${1:-latest}"; shift
-k3s_version="${1:-v1.28.6+k3s2}"; shift
+k3s_version="${1:-v1.29.1+k3s2}"; shift
 k3s_token="$1"; shift
 flannel_backend="$1"; shift
 ip_address="$1"; shift
@@ -46,7 +46,7 @@ if [ "$taint" == '1' ]; then
 fi
 
 # install k3s.
-# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.28.6+k3s2/pkg/cli/cmds/server.go#L572-L580
+# see server arguments at e.g. https://github.com/k3s-io/k3s/blob/v1.29.1+k3s2/pkg/cli/cmds/server.go#L566-L574
 # or run k3s server --help
 # see https://docs.k3s.io/installation/configuration
 # see https://docs.k3s.io/reference/server-config
@@ -75,7 +75,7 @@ systemctl cat k3s
 k3s check-config
 
 # wait for this node to be Ready.
-# e.g. s1     Ready    control-plane,master   3m    v1.28.6+k3s2
+# e.g. s1     Ready    control-plane,master   3m    v1.29.1+k3s2
 $SHELL -c 'node_name=$(hostname); echo "waiting for node $node_name to be ready..."; while [ -z "$(kubectl get nodes $node_name | grep -E "$node_name\s+Ready\s+")" ]; do sleep 3; done; echo "node ready!"'
 
 # wait for the kube-dns pod to be Running.
@@ -89,7 +89,7 @@ $SHELL -c 'while [ -z "$(kubectl get pods --selector k8s-app=kube-dns --namespac
 #       kubectl -n kube-system apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
 # see https://doc.traefik.io/traefik/v2.9/operations/api/
 # see https://github.com/k3s-io/k3s/issues/350#issuecomment-511218588
-# see https://github.com/k3s-io/k3s/blob/v1.28.6+k3s2/manifests/traefik.yaml
+# see https://github.com/k3s-io/k3s/blob/v1.29.1+k3s2/manifests/traefik.yaml
 # see https://github.com/traefik/traefik-helm-chart/blob/v25.0.2/traefik/values.yaml
 echo 'configuring traefik...'
 apt-get install -y python3-yaml
@@ -211,7 +211,7 @@ kubectl completion bash >/usr/share/bash-completion/completions/kubectl
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
 # save kubeconfig in the host.
-# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.28.6+k3s2/pkg/daemons/control/deps/deps.go#L235-L263
+# NB the default users are generated at https://github.com/k3s-io/k3s/blob/v1.29.1+k3s2/pkg/daemons/control/deps/deps.go#L235-L263
 #    and saved at /var/lib/rancher/k3s/server/cred/passwd
 mkdir -p /vagrant/tmp
 python3 - <<EOF
