@@ -258,7 +258,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.trigger.before :up do |trigger|
-    trigger.only_on = 's1'
+    trigger.only_on = 'registry'
     trigger.run = {
       inline: '''bash -euc \'
 install -d tmp
