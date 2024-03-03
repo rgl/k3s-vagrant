@@ -115,6 +115,24 @@ EXTRA_HOSTS = """
 #{GITLAB_IP} #{GITLAB_FQDN}
 """
 
+# provision common tools between servers and agents.
+def provision_common(config, role, n)
+  config.vm.provision 'shell', path: 'provision-helm.sh', args: [HELM_VERSION] # NB k3s also has a HelmChart CRD.
+  config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [HELMFILE_VERSION]
+  config.vm.provision 'shell', path: 'provision-k9s.sh', args: [K9S_VERSION]
+end
+
+# provision the user workloads when running in the last agent or server (iif
+# there are no agents).
+def provision_user_workloads(config, role, n)
+  if (role == 'agent' && n == NUMBER_OF_AGENT_NODES) || (role == 'server' && n == NUMBER_OF_SERVER_NODES && NUMBER_OF_AGENT_NODES == 0) then
+    env = {
+      'KUBECONFIG' => '/vagrant/tmp/admin.conf',
+    }
+    config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP], env: env
+  end
+end
+
 Vagrant.configure(2) do |config|
   config.vm.box = 'debian-12-amd64'
 
@@ -200,15 +218,13 @@ Vagrant.configure(2) do |config|
         KREW_VERSION,
         NUMBER_OF_AGENT_NODES > 0 && '1' || '0',
       ]
-      config.vm.provision 'shell', path: 'provision-helm.sh', args: [HELM_VERSION] # NB this might not really be needed, as rancher has a HelmChart CRD.
-      config.vm.provision 'shell', path: 'provision-helmfile.sh', args: [HELMFILE_VERSION]
-      config.vm.provision 'shell', path: 'provision-k9s.sh', args: [K9S_VERSION]
+      provision_common(config, 'server', n)
       if n == 1
         config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [KUBE_VIP_VERSION, SERVER_VIP]
         config.vm.provision 'shell', path: 'provision-metallb.sh', args: [METALLB_CHART_VERSION, LB_IP_RANGE]
         config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_VERSION]
-        config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP]
       end
+      provision_user_workloads(config, 'server', n)
     end
   end
 
@@ -236,6 +252,8 @@ Vagrant.configure(2) do |config|
         K3S_TOKEN,
         ip_address
       ]
+      provision_common(config, 'agent', n)
+      provision_user_workloads(config, 'agent', n)
     end
   end
 
