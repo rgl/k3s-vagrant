@@ -71,7 +71,7 @@ METALLB_CHART_VERSION = '4.15.0' # app version: 0.14.3
 
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
-GITLAB_RUNNER_CHART_VERSION = '0.61.1'
+GITLAB_RUNNER_CHART_VERSION = '0.62.1'
 
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 GITLAB_FQDN = 'gitlab.example.com'
