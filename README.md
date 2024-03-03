@@ -11,6 +11,7 @@ Configure the host machine `hosts` file with:
 10.11.0.10 s.example.test
 10.11.0.50 traefik.example.test
 10.11.0.50 kubernetes-dashboard.example.test
+10.11.0.50 argocd.example.test
 ```
 
 Install the base [Debian 12 (Bookworm) vagrant box](https://github.com/rgl/debian-vagrant).
@@ -193,6 +194,18 @@ The [Zot Registry](https://zotregistry.dev) is installed in the registry
 node and can be accessed at:
 
 http://registry.example.test
+
+## Argo CD
+
+Get the `admin` user password:
+
+```bash
+cat tmp/argocd-admin-password.txt
+```
+
+Access the web interface:
+
+  https://argocd.example.test
 
 # Notes
 

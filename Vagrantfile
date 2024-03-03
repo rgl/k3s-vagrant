@@ -77,6 +77,15 @@ GITLAB_RUNNER_CHART_VERSION = '0.62.1'
 GITLAB_FQDN = 'gitlab.example.com'
 GITLAB_IP = '10.10.9.99'
 
+# see https://github.com/argoproj/argo-cd/releases
+# renovate: datasource=github-releases depName=argoproj/argo-cd
+ARGOCD_CLI_VERSION = '2.10.2'
+
+# see https://artifacthub.io/packages/helm/argo/argo-cd
+# see https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+# renovate: datasource=helm depName=argo-cd registryUrl=https://argoproj.github.io/argo-helm
+ARGOCD_CHART_VERSION = '6.6.0' # app version 2.10.2.
+
 # set the flannel backend. use one of:
 # * host-gw:          non-secure network (needs ethernet (L2) connectivity between nodes).
 # * vxlan:            non-secure network (needs UDP (L3) connectivity between nodes).
@@ -130,6 +139,7 @@ def provision_user_workloads(config, role, n)
       'KUBECONFIG' => '/vagrant/tmp/admin.conf',
     }
     config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP], env: env
+    config.vm.provision 'shell', path: 'provision-argocd.sh', args: [ARGOCD_CLI_VERSION, ARGOCD_CHART_VERSION], env: env
   end
 end
 
