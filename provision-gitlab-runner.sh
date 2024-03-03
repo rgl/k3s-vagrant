@@ -52,9 +52,13 @@ certsSecretName: gitlab-runner-certs
 rbac:
   create: true
 runners:
-  image: ubuntu:22.04
   tags: "k8s,k3s"
   locked: false
+  config: |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "{{.Release.Namespace}}"
+        image = "ubuntu:22.04"
 hostAliases:
   - ip: $gitlab_ip
     hostnames:
