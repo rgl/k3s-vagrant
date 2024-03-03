@@ -3,12 +3,12 @@ set -euxo pipefail
 
 # make sure we have the gitlab-runner registration token.
 # NB this only works when https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant
-[ -f /vagrant/tmp/gitlab-runners-registration-token.txt ] || exit 0
+[ -f /vagrant/tmp/gitlab-runner-authentication-token-kubernetes-k3s.json ] || exit 0
 
 gitlab_runner_chart_version="${1:-0.62.1}"; shift || true
 gitlab_fqdn="${1:-gitlab.example.com}"; shift || true
 gitlab_ip="${1:-10.10.9.99}"; shift || true
-gitlab_runner_registration_token="$(cat /vagrant/tmp/gitlab-runners-registration-token.txt)"
+gitlab_runner_authentication_token="$(jq -r .token /vagrant/tmp/gitlab-runner-authentication-token-kubernetes-k3s.json)"
 
 # trust the gitlab certificate.
 cp /vagrant/tmp/$gitlab_fqdn-crt.pem /usr/local/share/ca-certificates/$gitlab_fqdn.crt
@@ -45,15 +45,14 @@ kubectl create secret \
 # NB the default values are described at:
 #       https://gitlab.com/gitlab-org/charts/gitlab-runner/-/blob/v0.62.1/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
+# see https://docs.gitlab.com/runner/executors/kubernetes/index.html
 cat >gitlab-runner-values.yml <<EOF
 gitlabUrl: https://$gitlab_fqdn
-runnerRegistrationToken: "$gitlab_runner_registration_token"
+runnerToken: "$gitlab_runner_authentication_token"
 certsSecretName: gitlab-runner-certs
 rbac:
   create: true
 runners:
-  tags: "k8s,k3s"
-  locked: false
   config: |
     [[runners]]
       [runners.kubernetes]

@@ -265,7 +265,7 @@ install -d tmp
 artifacts=(
   ../gitlab-vagrant/tmp/gitlab.example.com-crt.pem
   ../gitlab-vagrant/tmp/gitlab.example.com-crt.der
-  ../gitlab-vagrant/tmp/gitlab-runners-registration-token.txt
+  ../gitlab-vagrant/tmp/gitlab-runner-authentication-token-kubernetes-k3s.json
 )
 for artifact in "${artifacts[@]}"; do
   if [ -f $artifact ]; then
