@@ -86,6 +86,17 @@ ARGOCD_CLI_VERSION = '2.10.2'
 # renovate: datasource=helm depName=argo-cd registryUrl=https://argoproj.github.io/argo-helm
 ARGOCD_CHART_VERSION = '6.6.0' # app version 2.10.2.
 
+# see https://artifacthub.io/packages/helm/crossplane/crossplane
+# see https://github.com/crossplane/crossplane/tree/master/cluster/charts/crossplane
+# see https://github.com/crossplane/crossplane/releases
+# renovate: datasource=github-releases depName=crossplane/crossplane
+CROSSPLANE_CHART_VERSION = '1.15.0' # app version 1.15.0.
+
+# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3
+# see https://github.com/upbound/provider-aws
+# renovate: datasource=github-releases depName=upbound/provider-aws
+CROSSPLANE_PROVIDER_AWS_S3_VERSION = '1.1.0'
+
 # set the flannel backend. use one of:
 # * host-gw:          non-secure network (needs ethernet (L2) connectivity between nodes).
 # * vxlan:            non-secure network (needs UDP (L3) connectivity between nodes).
@@ -140,6 +151,7 @@ def provision_user_workloads(config, role, n)
     }
     config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP], env: env
     config.vm.provision 'shell', path: 'provision-argocd.sh', args: [ARGOCD_CLI_VERSION, ARGOCD_CHART_VERSION], env: env
+    config.vm.provision 'shell', path: 'provision-crossplane.sh', args: [CROSSPLANE_CHART_VERSION, CROSSPLANE_PROVIDER_AWS_S3_VERSION], env: env
   end
 end
 

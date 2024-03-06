@@ -207,6 +207,64 @@ Access the web interface:
 
   https://argocd.example.test
 
+## Crossplane
+
+Set the AWS credentials secret:
+
+```bash
+# NB for testing purposes, you can copy these from the AWS Management Console.
+cat >tmp/aws-credentials.txt <<'EOF'
+[default]
+aws_access_key_id = <AWS_ACCESS_KEY_ID>
+aws_secret_access_key = <AWS_SECRET_ACCESS_KEY>
+#aws_session_token = <AWS_SESSION_TOKEN>
+EOF
+export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl create secret generic aws-credentials \
+  --namespace crossplane-system \
+  --from-file credentials=tmp/aws-credentials.txt
+```
+
+Create an S3 bucket:
+
+```bash
+# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.1.0/resources/s3.aws.upbound.io/Bucket/v1beta1
+# NB Bucket is cluster scoped.
+#    see kubectl get crd buckets.s3.aws.upbound.io -o yaml
+export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl create -f - <<'EOF'
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: crossplane-hello-world
+spec:
+  forProvider:
+    region: eu-west-1
+    tags:
+      owner: rgl
+  providerConfigRef:
+    name: default
+EOF
+```
+
+List the created bucket:
+
+```bash
+kubectl get buckets
+```
+
+Describe the create bucket:
+
+```bash
+kubectl describe bucket/crossplane-hello-world
+```
+
+Delete the created bucket:
+
+```bash
+kubectl delete bucket/crossplane-hello-world
+```
+
 # Notes
 
 * k3s has a custom k8s authenticator module that does user authentication from `/var/lib/rancher/k3s/server/cred/passwd`.

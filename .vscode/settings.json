@@ -2,6 +2,7 @@
     "cSpell.words": [
         "argocd",
         "buildx",
+        "crossplane",
         "Distro",
         "ethernets",
         "httpie",
@@ -10,6 +11,7 @@
         "netplan",
         "networkd",
         "ruilopes",
-        "traefik"
+        "traefik",
+        "upbound"
     ]
 }
