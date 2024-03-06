@@ -34,7 +34,7 @@ ZOT_VERSION = '2.0.1'
 # see https://github.com/k3s-io/k3s/releases
 K3S_CHANNEL = 'latest'
 # renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=(?<version>1\.29\..+)
-K3S_VERSION = 'v1.29.1+k3s2'
+K3S_VERSION = 'v1.29.2+k3s1'
 
 # see https://github.com/kube-vip/kube-vip/releases
 # renovate: datasource=github-releases depName=kube-vip/kube-vip

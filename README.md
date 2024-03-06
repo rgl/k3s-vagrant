@@ -253,7 +253,7 @@ List the created bucket:
 kubectl get buckets
 ```
 
-Describe the create bucket:
+Describe the created bucket:
 
 ```bash
 kubectl describe bucket/crossplane-hello-world
