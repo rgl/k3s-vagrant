@@ -11,6 +11,7 @@ Configure the host machine `hosts` file with:
 10.11.0.10 s.example.test
 10.11.0.50 traefik.example.test
 10.11.0.50 kubernetes-dashboard.example.test
+10.11.0.50 kubernetes-hello.example.test
 10.11.0.50 argocd.example.test
 ```
 
@@ -112,6 +113,22 @@ xdg-open "$example_spin_url"
 # NB unfortunately, the pod will be stuck in the Terminating state.
 #    TODO https://github.com/deislabs/containerd-wasm-shims/issues/207
 kubectl delete -f example-spin.yml
+```
+
+Execute the [kubernetes-hello workload](https://github.com/rgl/kubernetes-hello), it uses [Role, RoleBinding](https://kubernetes.io/docs/reference/access-authn-authz/rbac/), [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/), [Secret](https://kubernetes.io/docs/concepts/configuration/secret/), [ServiceAccount](https://kubernetes.io/docs/concepts/security/service-accounts/), and [Service Account token volume projection (a JSON Web Token and OpenID Connect (OIDC) ID Token)](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection) that target a different audience:
+
+```bash
+export KUBECONFIG=$PWD/tmp/admin.conf
+wget -qO- https://github.com/rgl/kubernetes-hello/raw/master/resources.yml \
+  | perl -pe 's,(\s+host: kubernetes-hello)\..+,\1.example.test,' \
+  | kubectl apply -f -
+kubectl rollout status daemonset/kubernetes-hello
+kubectl get ingresses,services,pods,daemonset
+kubernetes_hello_ip="$(kubectl get ingress/kubernetes-hello -o json | jq -r .status.loadBalancer.ingress[0].ip)"
+kubernetes_hello_fqdn="$(kubectl get ingress/kubernetes-hello -o json | jq -r .spec.rules[0].host)"
+kubernetes_hello_url="http://$kubernetes_hello_fqdn"
+echo "kubernetes_hello_url: $kubernetes_hello_url"
+curl --resolve "$kubernetes_hello_fqdn:80:$kubernetes_hello_ip" "$kubernetes_hello_url"
 ```
 
 List this repository dependencies (and which have newer versions):
