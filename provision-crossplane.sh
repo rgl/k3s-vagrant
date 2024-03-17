@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-crossplane_chart_version="${1:-1.15.0}"; shift || true
+crossplane_chart_version="${1:-1.15.1}"; shift || true
 crossplane_provider_aws_s3_version="${1:-1.1.0}"; shift || true
 
 # add the crossplane helm charts repository.
@@ -10,7 +10,7 @@ helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
 #   NAME                   CHART VERSION  APP VERSION  DESCRIPTION
-#   crossplane/crossplane  1.15.0         1.15.0       Crossplane is an open source Kubernetes add-on ...
+#   crossplane/crossplane  1.15.1         1.15.1       Crossplane is an open source Kubernetes add-on ...
 helm search repo crossplane/crossplane --versions | head -10
 
 # set the configuration.
