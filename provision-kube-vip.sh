@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-kube_vip_version="${1:-v0.7.1}"; shift || true
+kube_vip_version="${1:-v0.7.2}"; shift || true
 vip="${1:-10.11.0.30}"; shift || true
 # TODO use a specific version after https://github.com/kube-vip/kube-vip/issues/769 is addressed.
 kube_vip_rbac_url="https://kube-vip.io/manifests/rbac.yaml"
