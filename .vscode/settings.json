@@ -3,6 +3,7 @@
         "argocd",
         "buildx",
         "crossplane",
+        "daemonset",
         "Distro",
         "ethernets",
         "httpie",
@@ -10,6 +11,7 @@
         "macaddress",
         "netplan",
         "networkd",
+        "OIDC",
         "ruilopes",
         "traefik",
         "upbound"
