@@ -49,8 +49,8 @@ HELM_VERSION = 'v3.14.3'
 HELMFILE_VERSION = 'v0.144.0'
 
 # see https://github.com/kubernetes/dashboard/releases
-# renovate: datasource=github-releases depName=kubernetes/dashboard
-K8S_DASHBOARD_VERSION = 'v2.7.0'
+# renovate: datasource=helm depName=kubernetes-dashboard registryUrl=https://kubernetes.github.io/dashboard
+K8S_DASHBOARD_CHART_VERSION = 'v7.1.2'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
@@ -149,6 +149,7 @@ def provision_user_workloads(config, role, n)
     env = {
       'KUBECONFIG' => '/vagrant/tmp/admin.conf',
     }
+    config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP], env: env
     config.vm.provision 'shell', path: 'provision-argocd.sh', args: [ARGOCD_CLI_VERSION, ARGOCD_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-crossplane.sh', args: [CROSSPLANE_CHART_VERSION, CROSSPLANE_PROVIDER_AWS_S3_VERSION], env: env
@@ -244,7 +245,6 @@ Vagrant.configure(2) do |config|
       if n == 1
         config.vm.provision 'shell', path: 'provision-kube-vip.sh', args: [KUBE_VIP_VERSION, SERVER_VIP]
         config.vm.provision 'shell', path: 'provision-metallb.sh', args: [METALLB_CHART_VERSION, LB_IP_RANGE]
-        config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_VERSION]
       end
       provision_user_workloads(config, 'server', n)
     end
