@@ -237,6 +237,8 @@ aws_secret_access_key = <AWS_SECRET_ACCESS_KEY>
 #aws_session_token = <AWS_SESSION_TOKEN>
 EOF
 export KUBECONFIG=$PWD/tmp/admin.conf
+kubectl delete secret/aws-credentials \
+  --namespace crossplane-system
 kubectl create secret generic aws-credentials \
   --namespace crossplane-system \
   --from-file credentials=tmp/aws-credentials.txt
