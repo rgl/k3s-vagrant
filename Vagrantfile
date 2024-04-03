@@ -27,7 +27,7 @@ end
 
 # see https://github.com/project-zot/zot/releases
 # renovate: datasource=github-releases depName=project-zot/zot
-ZOT_VERSION = '2.0.2'
+ZOT_VERSION = '2.0.3'
 
 # see https://get.k3s.io/
 # see https://update.k3s.io/v1-release/channels
