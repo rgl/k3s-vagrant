@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
+# NB as-of https://github.com/k3s-io/k3s/releases/tag/v1.29.3+k3s1 this
+#    configuration is no longer required. its left here for reference.
+# see https://github.com/k3s-io/k3s/pull/9519
+exit 0
+
 # configure k3s containerd.
 # see https://docs.k3s.io/advanced#configuring-containerd
 # see https://github.com/deislabs/containerd-wasm-shims
