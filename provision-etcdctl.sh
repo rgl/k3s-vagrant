@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-etcd_version="${1:-v3.5.12}"; shift || true
+etcd_version="${1:-v3.5.13}"; shift || true
 
 # install the binaries.
 url="https://github.com/etcd-io/etcd/releases/download/$etcd_version/etcd-$etcd_version-linux-amd64.tar.gz"
