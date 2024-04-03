@@ -54,7 +54,7 @@ K8S_DASHBOARD_CHART_VERSION = 'v7.1.2'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
-K9S_VERSION = 'v0.32.3'
+K9S_VERSION = 'v0.32.4'
 
 # see https://github.com/kubernetes-sigs/krew/releases
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
@@ -105,8 +105,8 @@ FLANNEL_BACKEND = 'host-gw'
 #FLANNEL_BACKEND = 'vxlan'
 #FLANNEL_BACKEND = 'wireguard-native'
 
-NUMBER_OF_SERVER_NODES  = 3
-NUMBER_OF_AGENT_NODES   = 2
+NUMBER_OF_SERVER_NODES  = 1
+NUMBER_OF_AGENT_NODES   = 1
 
 BRIDGE_NAME           = nil
 REGISTRY_FQDN         = 'registry.example.test'
