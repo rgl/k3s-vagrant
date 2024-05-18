@@ -277,6 +277,12 @@ Describe the created bucket:
 kubectl describe bucket/crossplane-hello-world
 ```
 
+Using the AWS CLI, list the S3 buckets:
+
+```bash
+AWS_CONFIG_FILE=tmp/aws-credentials.txt aws s3 ls
+```
+
 Delete the created bucket:
 
 ```bash
