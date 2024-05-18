@@ -90,7 +90,7 @@ ARGOCD_CHART_VERSION = '6.9.3' # app version 2.11.0.
 # see https://github.com/crossplane/crossplane/tree/master/cluster/charts/crossplane
 # see https://github.com/crossplane/crossplane/releases
 # renovate: datasource=github-releases depName=crossplane/crossplane
-CROSSPLANE_CHART_VERSION = '1.15.1' # app version 1.15.1.
+CROSSPLANE_CHART_VERSION = '1.16.0' # app version 1.16.0.
 
 # see https://marketplace.upbound.io/providers/upbound/provider-aws-s3
 # see https://github.com/upbound/provider-aws
