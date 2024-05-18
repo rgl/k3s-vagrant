@@ -134,8 +134,7 @@ curl --resolve "$kubernetes_hello_fqdn:80:$kubernetes_hello_ip" "$kubernetes_hel
 List this repository dependencies (and which have newer versions):
 
 ```bash
-export GITHUB_COM_TOKEN='YOUR_GITHUB_PERSONAL_TOKEN'
-./renovate.sh
+GITHUB_COM_TOKEN='YOUR_GITHUB_PERSONAL_TOKEN' ./renovate.sh
 ```
 
 ## Traefik Dashboard
