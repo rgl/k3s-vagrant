@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-metallb_chart_version="${1:-5.0.2}"; shift || true
+metallb_chart_version="${1:-6.1.7}"; shift || true
 lb_ip_range="${1:-10.11.0.50-10.11.0.250}"; shift || true
 
 # add the bitnami helm charts repository.
