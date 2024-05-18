@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 crossplane_chart_version="${1:-1.16.0}"; shift || true
-crossplane_provider_aws_s3_version="${1:-1.3.0}"; shift || true
+crossplane_provider_aws_s3_version="${1:-1.4.0}"; shift || true
 
 # add the crossplane helm charts repository.
 helm repo add crossplane https://charts.crossplane.io/stable
@@ -37,7 +37,7 @@ helm upgrade --install \
 # NB Provider is cluster scoped.
 #    see kubectl get crd providers.pkg.crossplane.io -o yaml
 # see https://docs.crossplane.io/v1.15/api/
-# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.3.0
+# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.4.0
 kubectl apply -f - <<EOF
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
