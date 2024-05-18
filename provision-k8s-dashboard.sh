@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-kubernetes_dashboard_chart_version="${1:-v7.1.3}"; shift || true
+kubernetes_dashboard_chart_version="${1:-v7.4.0}"; shift || true
 kubernetes_dashboard_fqdn="kubernetes-dashboard.$(hostname --domain)"
 
 # add the kubernetes-dashboard helm charts repository.
@@ -10,7 +10,7 @@ helm repo update
 
 # search the chart and app versions, e.g., in this case we are using:
 # NAME                                     	 CHART VERSION  APP VERSION  DESCRIPTION
-# kubernetes-dashboard/kubernetes-dashboard          7.1.3               General-purpose web UI for Kubernetes clusters
+# kubernetes-dashboard/kubernetes-dashboard          7.4.0               General-purpose web UI for Kubernetes clusters
 helm search repo kubernetes-dashboard/kubernetes-dashboard --versions | head -10
 
 # set the configuration.

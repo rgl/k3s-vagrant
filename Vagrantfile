@@ -50,7 +50,7 @@ HELMFILE_VERSION = 'v0.144.0'
 
 # see https://github.com/kubernetes/dashboard/releases
 # renovate: datasource=helm depName=kubernetes-dashboard registryUrl=https://kubernetes.github.io/dashboard
-K8S_DASHBOARD_CHART_VERSION = 'v7.1.3'
+K8S_DASHBOARD_CHART_VERSION = 'v7.4.0'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
