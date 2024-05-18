@@ -8,8 +8,8 @@ exit 0
 
 # configure k3s containerd.
 # see https://docs.k3s.io/advanced#configuring-containerd
-# see https://github.com/deislabs/containerd-wasm-shims
-# see https://github.com/deislabs/containerd-wasm-shims/blob/main/containerd-shim-spin/src/main.rs
+# see https://github.com/spinkube/containerd-shim-spin
+# see https://github.com/spinkube/containerd-shim-spin/blob/main/containerd-shim-spin/src/main.rs
 # see https://github.com/containerd/runwasi
 # see https://github.com/containerd/runwasi/blob/main/crates/containerd-shim-wasmtime/src/main.rs
 # see https://github.com/containerd/containerd/blob/main/runtime/v2/README.md#configuring-runtimes

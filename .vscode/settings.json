@@ -6,6 +6,7 @@
         "daemonset",
         "Distro",
         "ethernets",
+        "healthz",
         "httpie",
         "KUBECONFIG",
         "macaddress",
