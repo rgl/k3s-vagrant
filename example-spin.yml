@@ -39,6 +39,8 @@ spec:
 # see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#deployment-v1-apps
 # see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#podtemplatespec-v1-core
 # see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#container-v1-core
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#probe-v1-core
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#httpgetaction-v1-core
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,11 +61,14 @@ spec:
         - name: example
           # see https://github.com/rgl/spin-http-go-example
           # see https://github.com/rgl/spin-http-go-example/pkgs/container/spin-http-go-example
-          image: ghcr.io/rgl/spin-http-go-example:0.2.0
-          command: ["/"]
+          image: ghcr.io/rgl/spin-http-go-example:0.3.1
           ports:
             - name: web
               containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: web
           resources:
             requests:
               memory: 32Mi
