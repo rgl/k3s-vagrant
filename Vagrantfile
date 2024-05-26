@@ -79,12 +79,12 @@ GITLAB_IP = '10.10.9.99'
 
 # see https://github.com/argoproj/argo-cd/releases
 # renovate: datasource=github-releases depName=argoproj/argo-cd
-ARGOCD_CLI_VERSION = '2.11.0'
+ARGOCD_CLI_VERSION = '2.11.2'
 
 # see https://artifacthub.io/packages/helm/argo/argo-cd
 # see https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
 # renovate: datasource=helm depName=argo-cd registryUrl=https://argoproj.github.io/argo-helm
-ARGOCD_CHART_VERSION = '6.9.3' # app version 2.11.0.
+ARGOCD_CHART_VERSION = '6.11.1' # app version 2.11.2.
 
 # see https://artifacthub.io/packages/helm/crossplane/crossplane
 # see https://github.com/crossplane/crossplane/tree/master/cluster/charts/crossplane
