@@ -4,7 +4,7 @@ set -euo pipefail
 #
 # deploy helm.
 
-helm_version="${1:-v3.15.0}"; shift || true
+helm_version="${1:-v3.15.1}"; shift || true
 
 # install dependencies.
 apt-get install -y --no-install-recommends git-core
