@@ -44,9 +44,9 @@ KUBE_VIP_VERSION = 'v0.8.0'
 # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION = 'v3.15.0'
 
-# see https://github.com/roboll/helmfile/releases
-# renovate: datasource=github-releases depName=roboll/helmfile
-HELMFILE_VERSION = 'v0.144.0'
+# see https://github.com/helmfile/helmfile/releases
+# renovate: datasource=github-releases depName=helmfile/helmfile
+HELMFILE_VERSION = '0.164.0'
 
 # see https://github.com/kubernetes/dashboard/releases
 # renovate: datasource=helm depName=kubernetes-dashboard registryUrl=https://kubernetes.github.io/dashboard
