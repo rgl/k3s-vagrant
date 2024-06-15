@@ -244,7 +244,7 @@ kubectl create secret generic aws-credentials \
 Create an S3 bucket:
 
 ```bash
-# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.5.0/resources/s3.aws.upbound.io/Bucket/v1beta1
+# see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.7.0/resources/s3.aws.upbound.io/Bucket/v1beta1
 # NB Bucket is cluster scoped.
 #    see kubectl get crd buckets.s3.aws.upbound.io -o yaml
 export KUBECONFIG=$PWD/tmp/admin.conf
