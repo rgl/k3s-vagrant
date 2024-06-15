@@ -67,7 +67,7 @@ ETCDCTL_VERSION = 'v3.5.13'
 
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
-METALLB_CHART_VERSION = '6.2.1' # app version: 0.14.5
+METALLB_CHART_VERSION = '6.3.3' # app version: 0.14.5
 
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
