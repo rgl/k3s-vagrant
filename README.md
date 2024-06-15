@@ -119,7 +119,8 @@ Execute the [kubernetes-hello workload](https://github.com/rgl/kubernetes-hello)
 export KUBECONFIG=$PWD/tmp/admin.conf
 wget -qO- https://github.com/rgl/kubernetes-hello/raw/master/resources.yml \
   | perl -pe 's,(\s+host: kubernetes-hello)\..+,\1.example.test,' \
-  | kubectl apply -f -
+  > tmp/kubernetes-hello.yml
+kubectl apply -f tmp/kubernetes-hello.yml
 kubectl rollout status daemonset/kubernetes-hello
 kubectl get ingresses,services,pods,daemonset
 kubernetes_hello_ip="$(kubectl get ingress/kubernetes-hello -o json | jq -r .status.loadBalancer.ingress[0].ip)"
@@ -127,6 +128,7 @@ kubernetes_hello_fqdn="$(kubectl get ingress/kubernetes-hello -o json | jq -r .s
 kubernetes_hello_url="http://$kubernetes_hello_fqdn"
 echo "kubernetes_hello_url: $kubernetes_hello_url"
 curl --resolve "$kubernetes_hello_fqdn:80:$kubernetes_hello_ip" "$kubernetes_hello_url"
+kubectl delete -f tmp/kubernetes-hello.yml
 ```
 
 List this repository dependencies (and which have newer versions):
