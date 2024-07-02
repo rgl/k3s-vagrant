@@ -3,11 +3,11 @@ set -euxo pipefail
 
 # see https://github.com/spinkube/containerd-shim-spin
 # renovate: datasource=github-releases depName=spinkube/containerd-shim-spin
-CONTAINERD_SHIM_SPIN_VERSION='0.14.1'
+CONTAINERD_SHIM_SPIN_VERSION='0.15.0'
 
 # bail when already installed.
 if [ -x /usr/local/bin/containerd-shim-spin-v2 ]; then
-    # e.g. Version: 0.14.1
+    # e.g. Version: 0.15.0
     actual_version="$(/usr/local/bin/containerd-shim-spin-v2 -v | perl -ne '/^\s*Version: (.+)/ && print $1')"
     if [ "$actual_version" == "$CONTAINERD_SHIM_SPIN_VERSION" ]; then
         echo 'ANSIBLE CHANGED NO'
