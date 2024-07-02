@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 argocd_cli_version="${1:-2.11.3}"; shift || true
-argocd_chart_version="${1:-7.1.3}"; shift || true
+argocd_chart_version="${1:-7.3.3}"; shift || true
 argocd_fqdn="argocd.$(hostname --domain)"
 
 # install the argocd cli.
@@ -18,12 +18,12 @@ helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
 #     NAME            CHART VERSION APP VERSION DESCRIPTION
-#     argo/argo-cd    7.1.3         v2.11.3     A Helm chart for Argo CD, a declarative, GitOps...
+#     argo/argo-cd    7.3.3         v2.11.3     A Helm chart for Argo CD, a declarative, GitOps...
 helm search repo argo/argo-cd --versions | head -10
 
 # set the configuration.
 # NB the default values are described at:
-#       https://github.com/argoproj/argo-helm/blob/argo-cd-7.1.3/charts/argo-cd/values.yaml
+#       https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.3/charts/argo-cd/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
 cat >argocd-values.yml <<EOF
 global:
