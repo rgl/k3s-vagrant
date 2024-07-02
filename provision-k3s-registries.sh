@@ -15,7 +15,7 @@ registry.gitlab.com
 #    only works because k3s is using a custom fork of containerd.
 # see https://docs.k3s.io/installation/private-registry#rewrites
 # see /var/lib/rancher/k3s/agent/etc/containerd/config.toml
-# see https://github.com/k3s-io/k3s/blob/v1.30.1+k3s1/pkg/agent/templates/templates_linux.go
+# see https://github.com/k3s-io/k3s/blob/v1.30.2+k3s1/pkg/agent/templates/templates_linux.go
 # see https://github.com/k3s-io/k3s/pull/3064
 # see https://github.com/rancher/rke2/issues/741
 # see https://github.com/containerd/containerd/pull/5171
