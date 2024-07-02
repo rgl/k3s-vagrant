@@ -54,7 +54,7 @@ K8S_DASHBOARD_CHART_VERSION = 'v7.5.0'
 
 # see https://github.com/derailed/k9s/releases
 # renovate: datasource=github-releases depName=derailed/k9s
-K9S_VERSION = 'v0.32.4'
+K9S_VERSION = 'v0.32.5'
 
 # see https://github.com/kubernetes-sigs/krew/releases
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
