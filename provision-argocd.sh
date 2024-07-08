@@ -5,6 +5,103 @@ argocd_cli_version="${1:-2.11.3}"; shift || true
 argocd_chart_version="${1:-7.3.3}"; shift || true
 argocd_fqdn="argocd.$(hostname --domain)"
 
+# create the argocd-server tls secret.
+# NB argocd-server will automatically reload this secret.
+# NB alternatively we could set the server.certificate.enabled helm value. but
+#    that does not allow us to fully customize the certificate (e.g. subject).
+# see https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.3/charts/argo-cd/templates/argocd-server/certificate.yaml
+# see https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/
+kubectl create namespace argocd
+kubectl apply -n argocd -f - <<EOF
+# see https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-server
+spec:
+  subject:
+    organizations:
+      - k3s-vagrant
+    organizationalUnits:
+      - Kubernetes
+  commonName: ArgoCD
+  dnsNames:
+    - $argocd_fqdn
+  duration: 1h # NB this is so low for testing purposes.
+  privateKey:
+    algorithm: ECDSA # NB Ed25519 is not yet supported by chrome 93 or firefox 91.
+    size: 256
+  secretName: argocd-server-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: ingress
+EOF
+kubectl wait --timeout=5m --for=condition=Ready --namespace argocd certificate/argocd-server
+
+# create the argocd-repo-server tls secret.
+# NB argocd-repo-server will NOT automatically reload this secret. instead, the
+#    argocd-repo-server is configured to be automatically restarted by the
+#    reloader controller.
+# see https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/
+kubectl apply -n argocd -f - <<EOF
+# see https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-repo-server
+spec:
+  subject:
+    organizations:
+      - k3s-vagrant
+    organizationalUnits:
+      - Kubernetes
+  commonName: ArgoCD
+  dnsNames:
+    - argocd-repo-server
+    - argocd-repo-server.argocd.svc
+  duration: 1h # NB this is so low for testing purposes.
+  privateKey:
+    algorithm: ECDSA # NB Ed25519 is not yet supported by chrome 93 or firefox 91.
+    size: 256
+  secretName: argocd-repo-server-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: ingress
+EOF
+kubectl wait --timeout=5m --for=condition=Ready --namespace argocd certificate/argocd-repo-server
+
+# create the argocd-dex-server tls secret.
+# NB argocd-dex-server will NOT automatically reload this secret. instead, the
+#    argocd-dex-server is configured to be automatically restarted by the
+#    reloader controller.
+# see https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/
+kubectl apply -n argocd -f - <<EOF
+# see https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+ name: argocd-dex-server
+spec:
+ subject:
+   organizations:
+     - k3s-vagrant
+   organizationalUnits:
+     - Kubernetes
+ commonName: ArgoCD
+ dnsNames:
+   - argocd-dex-server
+   - argocd-dex-server.argocd.svc
+ duration: 1h # NB this is so low for testing purposes.
+ privateKey:
+   algorithm: ECDSA # NB Ed25519 is not yet supported by chrome 93 or firefox 91.
+   size: 256
+ secretName: argocd-dex-server-tls
+ issuerRef:
+   kind: ClusterIssuer
+   name: ingress
+EOF
+kubectl wait --timeout=5m --for=condition=Ready --namespace argocd certificate/argocd-dex-server
+
 # install the argocd cli.
 argocd_url="https://github.com/argoproj/argo-cd/releases/download/v$argocd_cli_version/argocd-linux-amd64"
 t="$(mktemp -q -d --suffix=.argocd)"
@@ -31,9 +128,19 @@ global:
 server:
   ingress:
     enabled: true
-configs:
-  params:
-    server.insecure: true
+    tls: true
+  extraArgs:
+    - --repo-server-strict-tls
+    - --dex-server-strict-tls
+controller:
+  extraArgs:
+    - --repo-server-strict-tls
+repoServer:
+  deploymentAnnotations:
+    secret.reloader.stakater.com/reload: argocd-repo-server-tls
+dex:
+  deploymentAnnotations:
+    secret.reloader.stakater.com/reload: argocd-dex-server-tls
 EOF
 
 # install.
@@ -50,3 +157,34 @@ helm upgrade --install \
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" \
   | base64 --decode \
   > /vagrant/tmp/argocd-admin-password.txt
+
+# verify the certificates.
+# NB to further troubleshoot, add the -debug -tlsextdebug cli arguments.
+endpoints=(
+  'argocd.example.test:443'
+  'argocd-repo-server.argocd.svc:8081'
+  # NB dex verification is commented because we have not configured dex, as
+  #    such, there is not endpoint listening, so we cannot verify the
+  #    certificate.
+  #'argocd-dex-server.argocd.svc:5556'
+)
+for endpoint in "${endpoints[@]}"; do
+  h="${endpoint%:*}"
+  kubectl -n argocd exec --stdin deployment/argocd-server -- bash -eu <<EOF
+# dump certificate.
+openssl s_client \
+  -connect "$endpoint" \
+  -servername "$h" \
+  </dev/null \
+  2>/dev/null \
+  | openssl x509 -noout -text
+# verify certificate.
+openssl s_client \
+  -connect "$endpoint" \
+  -servername "$h" \
+  -showcerts \
+  -verify 100 \
+  -verify_return_error \
+  -CAfile <(echo "$(cat /vagrant/tmp/ingress-ca-crt.pem)")
+EOF
+done

@@ -223,6 +223,12 @@ Access the web interface:
 
   https://argocd.example.test
 
+Show the configuration:
+
+```bash
+kubectl get -n argocd configmap/argocd-cmd-params-cm -o yaml
+```
+
 ## Crossplane
 
 Set the AWS credentials secret:

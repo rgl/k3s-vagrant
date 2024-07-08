@@ -2,6 +2,7 @@
     "cSpell.words": [
         "argocd",
         "buildx",
+        "configmap",
         "crossplane",
         "daemonset",
         "Distro",
