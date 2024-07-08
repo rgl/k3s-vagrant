@@ -69,6 +69,10 @@ ETCDCTL_VERSION = 'v3.5.14'
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
 METALLB_CHART_VERSION = '6.3.5' # app version: 0.14.5
 
+# see https://artifacthub.io/packages/helm/cert-manager/cert-manager
+# renovate: datasource=helm depName=cert-manager registryUrl=https://charts.jetstack.io
+CERT_MANAGER_CHART_VERSION = '1.15.1' # app version: 1.15.1
+
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
 GITLAB_RUNNER_CHART_VERSION = '0.65.0'
@@ -149,6 +153,7 @@ def provision_user_workloads(config, role, n)
     env = {
       'KUBECONFIG' => '/vagrant/tmp/admin.conf',
     }
+    config.vm.provision 'shell', path: 'provision-cert-manager.sh', args: [CERT_MANAGER_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-gitlab-runner.sh', args: [GITLAB_RUNNER_CHART_VERSION, GITLAB_FQDN, GITLAB_IP], env: env
     config.vm.provision 'shell', path: 'provision-argocd.sh', args: [ARGOCD_CLI_VERSION, ARGOCD_CHART_VERSION], env: env
