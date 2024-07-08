@@ -69,6 +69,11 @@ ETCDCTL_VERSION = 'v3.5.14'
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
 METALLB_CHART_VERSION = '6.3.5' # app version: 0.14.5
 
+# see https://www.terraform.io/downloads.html
+# see https://github.com/hashicorp/terraform/releases
+# renovate: datasource=github-releases depName=hashicorp/terraform
+TERRAFORM_VERSION = '1.9.1'
+
 # see https://artifacthub.io/packages/helm/cert-manager/cert-manager
 # renovate: datasource=helm depName=cert-manager registryUrl=https://charts.jetstack.io
 CERT_MANAGER_CHART_VERSION = '1.15.1' # app version: 1.15.1
@@ -158,6 +163,7 @@ def provision_user_workloads(config, role, n)
     env = {
       'KUBECONFIG' => '/vagrant/tmp/admin.conf',
     }
+    config.vm.provision 'shell', path: 'provision-terraform.sh', args: [TERRAFORM_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-cert-manager.sh', args: [CERT_MANAGER_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-reloader.sh', args: [RELOADER_CHART_VERSION], env: env
     config.vm.provision 'shell', path: 'provision-k8s-dashboard.sh', args: [K8S_DASHBOARD_CHART_VERSION], env: env

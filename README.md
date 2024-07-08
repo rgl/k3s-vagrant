@@ -131,6 +131,16 @@ curl --resolve "$kubernetes_hello_fqdn:80:$kubernetes_hello_ip" "$kubernetes_hel
 kubectl delete -f tmp/kubernetes-hello.yml
 ```
 
+Access the example `nginx` ArgoCD application service (managed by ArgoCD as the
+[`nginx` ArgoCD Application](argocd/main.tf)):
+
+```bash
+nginx_ip="$(kubectl get service/nginx -o json | jq -r .status.loadBalancer.ingress[0].ip)"
+nginx_url="http://$nginx_ip"
+echo "nginx_url: $nginx_url"
+curl "$nginx_url"
+```
+
 List this repository dependencies (and which have newer versions):
 
 ```bash

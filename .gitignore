@@ -1,2 +1,5 @@
 .vagrant/
 tmp/
+.terraform/
+.terraform.lock.hcl
+*.tfstate*
