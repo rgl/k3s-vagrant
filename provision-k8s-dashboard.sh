@@ -4,6 +4,59 @@ set -euxo pipefail
 kubernetes_dashboard_chart_version="${1:-v7.5.0}"; shift || true
 kubernetes_dashboard_fqdn="kubernetes-dashboard.$(hostname --domain)"
 
+# create the kubernetes-dashboard tls secret.
+# see https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/
+kubectl create namespace kubernetes-dashboard
+kubectl apply -n kubernetes-dashboard -f - <<EOF
+# see https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kubernetes-dashboard
+spec:
+  subject:
+    organizations:
+      - k3s-vagrant
+    organizationalUnits:
+      - Kubernetes
+  commonName: Kubernetes Dashboard
+  dnsNames:
+    - $kubernetes_dashboard_fqdn
+  duration: 1h # NB this is so low for testing purposes.
+  privateKey:
+    algorithm: ECDSA # NB Ed25519 is not yet supported by chrome 93 or firefox 91.
+    size: 256
+  secretName: kubernetes-dashboard-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: ingress
+EOF
+kubectl wait --timeout=5m --for=condition=Ready --namespace kubernetes-dashboard certificate/kubernetes-dashboard
+
+# create the ingress.
+# see https://kubernetes.io/docs/concepts/services-networking/ingress/
+# see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#ingress-v1-networking-k8s-io
+kubectl apply -n kubernetes-dashboard -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+spec:
+  rules:
+    - host: $kubernetes_dashboard_fqdn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard-kong-proxy
+                port:
+                  name: kong-proxy
+  tls:
+    - secretName: kubernetes-dashboard-tls
+EOF
+
 # add the kubernetes-dashboard helm charts repository.
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm repo update
@@ -18,13 +71,10 @@ helm search repo kubernetes-dashboard/kubernetes-dashboard --versions | head -10
 # see https://github.com/kubernetes/dashboard/blob/master/charts/kubernetes-dashboard/values.yaml
 # see https://github.com/kubernetes/dashboard/blob/master/charts/kubernetes-dashboard/Chart.yaml
 cat >kubernetes-dashboard-values.yml <<EOF
-app:
-  ingress:
-    enabled: true
-    useDefaultIngressClass: true
-    useDefaultAnnotations: false
-    hosts:
-      - $kubernetes_dashboard_fqdn
+kong:
+  proxy:
+    http:
+      enabled: true
 api:
   scaling:
     replicas: 1
