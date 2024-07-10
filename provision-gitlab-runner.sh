@@ -52,6 +52,8 @@ runnerToken: "$gitlab_runner_authentication_token"
 certsSecretName: gitlab-runner-certs
 rbac:
   create: true
+serviceAccount:
+  create: true
 runners:
   config: |
     [[runners]]
