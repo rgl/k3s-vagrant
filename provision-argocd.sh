@@ -24,7 +24,7 @@ spec:
       - k3s-vagrant
     organizationalUnits:
       - Kubernetes
-  commonName: ArgoCD
+  commonName: Argo CD Server
   dnsNames:
     - $argocd_fqdn
   duration: 1h # NB this is so low for testing purposes.
@@ -55,7 +55,7 @@ spec:
       - k3s-vagrant
     organizationalUnits:
       - Kubernetes
-  commonName: ArgoCD
+  commonName: Argo CD Repo Server
   dnsNames:
     - argocd-repo-server
     - argocd-repo-server.argocd.svc
@@ -87,7 +87,7 @@ spec:
      - k3s-vagrant
    organizationalUnits:
      - Kubernetes
- commonName: ArgoCD
+ commonName: Argo CD Dex Server
  dnsNames:
    - argocd-dex-server
    - argocd-dex-server.argocd.svc
