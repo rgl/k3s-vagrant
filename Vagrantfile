@@ -42,7 +42,7 @@ KUBE_VIP_VERSION = 'v0.8.1'
 
 # see https://github.com/helm/helm/releases
 # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION = 'v3.15.2'
+HELM_VERSION = 'v3.15.3'
 
 # see https://github.com/helmfile/helmfile/releases
 # renovate: datasource=github-releases depName=helmfile/helmfile
