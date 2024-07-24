@@ -193,8 +193,12 @@ done
 export ARGOCD_SERVER="$argocd_fqdn"
 export ARGOCD_AUTH_USERNAME="admin"
 export ARGOCD_AUTH_PASSWORD="$(cat /vagrant/tmp/argocd-admin-password.txt)"
+export CHECKPOINT_DISABLE=1
+export TF_LOG=DEBUG # TF_LOG can be one of: ERROR, WARN, INFO, DEBUG, TRACE.
+export TF_LOG_PATH=terraform.log
 pushd /vagrant/argocd
-rm -f terraform.tfstate*
+rm -f terraform.tfstate* terraform*.log
 terraform init
-terraform apply -auto-approve
+terraform apply -auto-approve \
+  | tee terraform-apply.log
 popd

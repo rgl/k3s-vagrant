@@ -3,3 +3,4 @@ tmp/
 .terraform/
 .terraform.lock.hcl
 *.tfstate*
+*.log
