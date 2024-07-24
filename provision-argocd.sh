@@ -194,6 +194,7 @@ export ARGOCD_SERVER="$argocd_fqdn"
 export ARGOCD_AUTH_USERNAME="admin"
 export ARGOCD_AUTH_PASSWORD="$(cat /vagrant/tmp/argocd-admin-password.txt)"
 pushd /vagrant/argocd
+rm -f terraform.tfstate*
 terraform init
 terraform apply -auto-approve
 popd
