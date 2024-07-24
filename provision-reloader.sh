@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-reloader_chart_version="${1:-1.0.116}"; shift || true
+reloader_chart_version="${1:-1.0.119}"; shift || true
 
 # add the stakater reloader repository.
 # see https://github.com/stakater/reloader
