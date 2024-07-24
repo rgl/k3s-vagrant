@@ -1,6 +1,6 @@
 # see https://github.com/hashicorp/terraform
 terraform {
-  required_version = "1.9.1"
+  required_version = "1.9.2"
   required_providers {
     # see https://registry.terraform.io/providers/oboukili/argocd
     # see https://github.com/argoproj-labs/terraform-provider-argocd

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-terraform_version="${1:-1.9.1}"; shift || true
+terraform_version="${1:-1.9.2}"; shift || true
 
 # install dependencies.
 apt-get install -y unzip
