@@ -1,15 +1,15 @@
 #!/bin/bash
 set -euxo pipefail
 
-argocd_cli_version="${1:-2.11.4}"; shift || true
-argocd_chart_version="${1:-7.3.4}"; shift || true
+argocd_cli_version="${1:-2.11.6}"; shift || true
+argocd_chart_version="${1:-7.3.10}"; shift || true
 argocd_fqdn="argocd.$(hostname --domain)"
 
 # create the argocd-server tls secret.
 # NB argocd-server will automatically reload this secret.
 # NB alternatively we could set the server.certificate.enabled helm value. but
 #    that does not allow us to fully customize the certificate (e.g. subject).
-# see https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.4/charts/argo-cd/templates/argocd-server/certificate.yaml
+# see https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.10/charts/argo-cd/templates/argocd-server/certificate.yaml
 # see https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/
 kubectl create namespace argocd
 kubectl apply -n argocd -f - <<EOF
@@ -115,12 +115,12 @@ helm repo update
 
 # search the chart and app versions, e.g.: in this case we are using:
 #     NAME            CHART VERSION APP VERSION DESCRIPTION
-#     argo/argo-cd    7.3.4         v2.11.4     A Helm chart for Argo CD, a declarative, GitOps...
+#     argo/argo-cd    7.3.10        v2.11.6     A Helm chart for Argo CD, a declarative, GitOps...
 helm search repo argo/argo-cd --versions | head -10
 
 # set the configuration.
 # NB the default values are described at:
-#       https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.4/charts/argo-cd/values.yaml
+#       https://github.com/argoproj/argo-helm/blob/argo-cd-7.3.10/charts/argo-cd/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
 cat >argocd-values.yml <<EOF
 global:

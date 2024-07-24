@@ -226,7 +226,7 @@ http://registry.example.test
 Get the `admin` user password:
 
 ```bash
-cat tmp/argocd-admin-password.txt
+echo "Argo CD admin password: $(cat tmp/argocd-admin-password.txt)"
 ```
 
 Access the web interface:
