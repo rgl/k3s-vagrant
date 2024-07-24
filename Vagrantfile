@@ -63,7 +63,7 @@ KREW_VERSION = 'v0.4.4'
 # see https://github.com/etcd-io/etcd/releases
 # NB make sure you use a version compatible with k3s.
 # renovate: datasource=github-releases depName=etcd-io/etcd
-ETCDCTL_VERSION = 'v3.5.14'
+ETCDCTL_VERSION = 'v3.5.15'
 
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
