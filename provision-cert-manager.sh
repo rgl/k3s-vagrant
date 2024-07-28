@@ -87,7 +87,8 @@ kubectl get secret \
   --namespace cert-manager \
   --output jsonpath='{.data.ca\.crt}' \
   ingress-tls \
-  | base64 --decode >/vagrant/tmp/ingress-ca-crt.pem
+  | base64 --decode \
+  > /vagrant/tmp/ingress-ca-crt.pem
 
 # trust the ingress ca.
 install /vagrant/tmp/ingress-ca-crt.pem /usr/local/share/ca-certificates/ingress.crt
