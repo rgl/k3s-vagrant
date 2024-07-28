@@ -85,7 +85,7 @@ RELOADER_CHART_VERSION = '1.0.119' # app version: 1.0.119
 
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
-GITLAB_RUNNER_CHART_VERSION = '0.67.0'
+GITLAB_RUNNER_CHART_VERSION = '0.67.1'
 
 # link to the gitlab-vagrant environment (https://github.com/rgl/gitlab-vagrant running at ../gitlab-vagrant).
 GITLAB_FQDN = 'gitlab.example.com'
