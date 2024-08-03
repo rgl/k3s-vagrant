@@ -17,7 +17,7 @@ helm search repo crossplane/crossplane --versions | head -10
 # NB the default values are described at:
 #       https://github.com/crossplane/crossplane/tree/master/cluster/charts/crossplane/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
-# see https://docs.crossplane.io/v1.15/software/install/#customize-the-crossplane-helm-chart
+# see https://docs.crossplane.io/v1.16/software/install/#customize-the-crossplane-helm-chart
 cat >crossplane-values.yml <<EOF
 # empty.
 EOF
@@ -36,7 +36,7 @@ helm upgrade --install \
 # NB this is cluster-wide.
 # NB Provider is cluster scoped.
 #    see kubectl get crd providers.pkg.crossplane.io -o yaml
-# see https://docs.crossplane.io/v1.15/api/
+# see https://docs.crossplane.io/v1.16/api/
 # see https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.10.0
 kubectl apply -f - <<EOF
 apiVersion: pkg.crossplane.io/v1
