@@ -1,3 +1,10 @@
+locals {
+  # see https://github.com/bitnami/charts/tree/main/bitnami/nginx
+  # see https://artifacthub.io/packages/helm/bitnami/nginx
+  # renovate: datasource=docker depName=bitnamicharts/nginx
+  nginx_chart_version = "18.1.7"
+}
+
 # see https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project
 resource "argocd_project" "example" {
   metadata {
@@ -41,7 +48,7 @@ resource "argocd_application" "nginx" {
     source {
       repo_url        = "registry-1.docker.io/bitnamicharts"
       chart           = "nginx"
-      target_revision = "18.1.2"
+      target_revision = local.nginx_chart_version
       helm {
         values = yamlencode({
           serverBlock = <<-EOS

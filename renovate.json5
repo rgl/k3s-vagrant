@@ -10,7 +10,8 @@
       "fileMatch": [
         "Vagrantfile",
         "Dockerfile",
-        "\\.sh$"
+        "\\.sh$",
+        "\\.tf$",
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[^:]+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s.+?[:=]\\s*[\"']?(?<currentValue>.+?)[\"']?\\s"
