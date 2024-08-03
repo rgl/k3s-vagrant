@@ -76,7 +76,7 @@ TERRAFORM_VERSION = '1.9.3'
 
 # see https://artifacthub.io/packages/helm/cert-manager/cert-manager
 # renovate: datasource=helm depName=cert-manager registryUrl=https://charts.jetstack.io
-CERT_MANAGER_CHART_VERSION = '1.15.1' # app version: 1.15.1
+CERT_MANAGER_CHART_VERSION = '1.15.2' # app version: 1.15.2
 
 # see https://github.com/stakater/reloader
 # see https://artifacthub.io/packages/helm/stakater/reloader

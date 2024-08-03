@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-cert_manager_chart_version="${1:-1.15.1}"; shift || true
+cert_manager_chart_version="${1:-1.15.2}"; shift || true
 
 # provision cert-manager.
 # NB YOU MUST INSTALL CERT-MANAGER TO THE cert-manager NAMESPACE. the CRDs have it hard-coded.
@@ -18,7 +18,7 @@ helm repo update
 
 echo 'Setting the cert-manager values...'
 # NB the default values are described at:
-#       https://github.com/cert-manager/cert-manager/blob/v1.15.1/deploy/charts/cert-manager/values.yaml
+#       https://github.com/cert-manager/cert-manager/blob/v1.15.2/deploy/charts/cert-manager/values.yaml
 #    NB make sure you are seeing the same version of the chart that you are installing.
 cat >cert-manager-values.yml <<EOF
 # NB YOLO the CRDs.
