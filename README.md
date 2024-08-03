@@ -8,7 +8,7 @@ Configure the host machine `hosts` file with:
 
 ```
 10.11.0.4  registry.example.test
-10.11.0.10 s.example.test
+10.11.0.30 s.example.test
 10.11.0.50 traefik.example.test
 10.11.0.50 kubernetes-dashboard.example.test
 10.11.0.50 kubernetes-hello.example.test
