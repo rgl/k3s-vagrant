@@ -46,7 +46,7 @@ HELM_VERSION = 'v3.15.3'
 
 # see https://github.com/helmfile/helmfile/releases
 # renovate: datasource=github-releases depName=helmfile/helmfile
-HELMFILE_VERSION = '0.166.0'
+HELMFILE_VERSION = '0.167.0'
 
 # see https://github.com/kubernetes/dashboard/releases
 # renovate: datasource=helm depName=kubernetes-dashboard registryUrl=https://kubernetes.github.io/dashboard
