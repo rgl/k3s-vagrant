@@ -109,7 +109,7 @@ CROSSPLANE_CHART_VERSION = '1.16.0' # app version 1.16.0.
 # see https://marketplace.upbound.io/providers/upbound/provider-aws-s3
 # see https://github.com/upbound/provider-aws
 # renovate: datasource=github-releases depName=upbound/provider-aws
-CROSSPLANE_PROVIDER_AWS_S3_VERSION = '1.9.1'
+CROSSPLANE_PROVIDER_AWS_S3_VERSION = '1.10.0'
 
 # set the flannel backend. use one of:
 # * host-gw:          non-secure network (needs ethernet (L2) connectivity between nodes).
