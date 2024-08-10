@@ -72,7 +72,7 @@ METALLB_CHART_VERSION = '6.3.9' # app version: 0.14.5
 # see https://www.terraform.io/downloads.html
 # see https://github.com/hashicorp/terraform/releases
 # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION = '1.9.3'
+TERRAFORM_VERSION = '1.9.4'
 
 # see https://artifacthub.io/packages/helm/cert-manager/cert-manager
 # renovate: datasource=helm depName=cert-manager registryUrl=https://charts.jetstack.io
