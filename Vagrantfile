@@ -81,7 +81,7 @@ CERT_MANAGER_CHART_VERSION = '1.15.2' # app version: 1.15.2
 # see https://github.com/stakater/reloader
 # see https://artifacthub.io/packages/helm/stakater/reloader
 # renovate: datasource=helm depName=reloader registryUrl=https://stakater.github.io/stakater-charts
-RELOADER_CHART_VERSION = '1.0.119' # app version: 1.0.119
+RELOADER_CHART_VERSION = '1.0.121' # app version: 1.0.121
 
 # see https://gitlab.com/gitlab-org/charts/gitlab-runner/-/tags
 # renovate: datasource=helm depName=gitlab-runner registryUrl=https://charts.gitlab.io
