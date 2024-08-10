@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-zot_version="${1:-2.1.0}"
+zot_version="${1:-2.1.1}"
 
 zot_domain="$(hostname --fqdn)"
 zot_url="http://$zot_domain"
@@ -59,8 +59,8 @@ ln -sf /opt/zot/bin/zli /usr/local/bin/zli
 #       regctl image export registry.test/mirror/registry.k8s.io/pause pause.tar
 #       regctl image inspect registry.test/mirror/registry.k8s.io/pause
 #       regctl tag ls registry.test/mirror/registry.k8s.io/pause
-# see https://zotregistry.dev/v2.1.0/articles/mirroring/
-# see https://zotregistry.dev/v2.1.0/admin-guide/admin-configuration/#syncing-and-mirroring-registries
+# see https://zotregistry.dev/v2.1.1/articles/mirroring/
+# see https://zotregistry.dev/v2.1.1/admin-guide/admin-configuration/#syncing-and-mirroring-registries
 cat >/opt/zot/conf/config.yaml <<EOF
 storage:
   rootDirectory: /opt/zot/data
