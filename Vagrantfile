@@ -67,7 +67,7 @@ ETCDCTL_VERSION = 'v3.5.15'
 
 # see https://artifacthub.io/packages/helm/bitnami/metallb
 # renovate: datasource=helm depName=metallb registryUrl=https://charts.bitnami.com/bitnami
-METALLB_CHART_VERSION = '6.3.9' # app version: 0.14.5
+METALLB_CHART_VERSION = '6.3.10' # app version: 0.14.8
 
 # see https://www.terraform.io/downloads.html
 # see https://github.com/hashicorp/terraform/releases
