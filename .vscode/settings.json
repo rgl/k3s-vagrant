@@ -3,6 +3,8 @@
         "argocd",
         "buildx",
         "configmap",
+        "containerd",
+        "crictl",
         "crossplane",
         "daemonset",
         "Distro",

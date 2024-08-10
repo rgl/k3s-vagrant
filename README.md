@@ -71,6 +71,17 @@ time vagrant up --no-destroy-on-error --no-tty --provider=libvirt
 
 **NB** When the `NUMBER_OF_AGENT_NODES` `Vagrantfile` variable value is above `0`, the server nodes (e.g. `s1`) are [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to prevent them from executing non control-plane workloads. That kind of workload is executed in the agent nodes (e.g. `a1`).
 
+Show containerd information:
+
+```bash
+vagrant ssh s1
+sudo -i
+crictl version
+crictl info
+exit
+exit
+```
+
 Access the cluster from the host:
 
 ```bash
