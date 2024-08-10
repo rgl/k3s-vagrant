@@ -12,7 +12,7 @@ exit 0
 # see https://github.com/spinkube/containerd-shim-spin/blob/main/containerd-shim-spin/src/main.rs
 # see https://github.com/containerd/runwasi
 # see https://github.com/containerd/runwasi/blob/main/crates/containerd-shim-wasmtime/src/main.rs
-# see https://github.com/containerd/containerd/blob/main/runtime/v2/README.md#configuring-runtimes
+# see https://github.com/containerd/containerd/blob/main/core/runtime/v2/README.md#configuring-runtimes
 # see https://github.com/containerd/containerd/blob/main/docs/man/containerd-config.toml.5.md
 # see containerd config default
 # see containerd config dump
