@@ -2,7 +2,7 @@ locals {
   # see https://github.com/bitnami/charts/tree/main/bitnami/nginx
   # see https://artifacthub.io/packages/helm/bitnami/nginx
   # renovate: datasource=docker depName=bitnamicharts/nginx
-  nginx_chart_version = "18.1.7"
+  nginx_chart_version = "18.1.8"
 }
 
 # see https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project
