@@ -98,7 +98,7 @@ ARGOCD_CLI_VERSION = '2.12.0'
 # see https://artifacthub.io/packages/helm/argo/argo-cd
 # see https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
 # renovate: datasource=helm depName=argo-cd registryUrl=https://argoproj.github.io/argo-helm
-ARGOCD_CHART_VERSION = '7.4.2' # app version 2.12.0.
+ARGOCD_CHART_VERSION = '7.4.3' # app version 2.12.0.
 
 # see https://artifacthub.io/packages/helm/crossplane/crossplane
 # see https://github.com/crossplane/crossplane/tree/master/cluster/charts/crossplane
